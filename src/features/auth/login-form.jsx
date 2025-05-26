@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useDispatch } from "react-redux";
 
 const loginSchema = Yup.object({
   email: Yup.string()
@@ -26,6 +27,7 @@ const loginSchema = Yup.object({
 
 export function LoginForm({ className, ...props }) {
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const {
     register,
@@ -46,8 +48,13 @@ export function LoginForm({ className, ...props }) {
         credentials: "include",
         body: JSON.stringify(data),
       });
-      console.log("Login response:", response);
       if (response.ok) {
+        const user = await response.json();
+        dispatch({ type: "user/setUserEmail", payload: user.email });
+        dispatch({ type: "user/setUserName", payload: user.name });
+        dispatch({ type: "user/setUserLastName", payload: user.lastName });
+        dispatch({ type: "user/setUserPhone", payload: user.phone });
+        console.log("User logged in:", user);
         router.push("/");
       } else {
         if (response.status === 401) {

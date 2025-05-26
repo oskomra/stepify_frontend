@@ -1,0 +1,88 @@
+"use client";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as Yup from "yup";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import AddressForm from "./address-form";
+
+const addressSchema = Yup.object({
+  street: Yup.string().required("Street is required"),
+  city: Yup.string().required("City is required"),
+  postalCode: Yup.string().required("Postal code is required"),
+  country: Yup.string().required("Country is required"),
+});
+
+export default function EditAddress({ address }) {
+  const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: yupResolver(addressSchema),
+  });
+
+  async function onSubmit(data) {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/addresses/${address.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(data),
+        }
+      );
+      if (response.ok) {
+        const newAddress = await response.json();
+        dispatch({ type: "addresses/removeAddress", payload: address.id });
+        dispatch({ type: "addresses/addAddress", payload: newAddress });
+        setOpen(false);
+        reset();
+      }
+    } catch (error) {
+      console.error("Error adding address:", error);
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline">Edit address</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Edit address</DialogTitle>
+        </DialogHeader>
+        <AddressForm
+          onSubmit={onSubmit}
+          onCancel={() => setOpen(false)}
+          errors={errors}
+          register={register}
+          handleSubmit={handleSubmit}
+          submitText="Edit Address"
+          defaultValues={{
+            street: address.street || "",
+            city: address.city || "",
+            postalCode: address.postalCode || "",
+            country: address.country || "",
+          }}
+        />
+      </DialogContent>
+    </Dialog>
+  );
+}

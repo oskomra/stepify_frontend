@@ -69,6 +69,7 @@ export default function ProductDetails({ product }) {
               setSelectedColor={setSelectedColor}
               register={register}
               errors={errors}
+              setValue={setValue}
             />
             <ProductSizes
               selectedSize={selectedSize}

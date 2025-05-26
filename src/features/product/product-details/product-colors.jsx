@@ -4,9 +4,11 @@ export default function ProductDetailsColors({
   setSelectedColor,
   register,
   errors,
+  setValue,
 }) {
   function handleColorClick(color) {
-    setSelectedColor(color);
+    setSelectedColor(color); // store the whole color object
+    setValue("color", color.color);
   }
 
   return (
@@ -19,7 +21,9 @@ export default function ProductDetailsColors({
             src={`http://localhost:8080${color.images[0]}`}
             alt={color.color}
             className={`w-12 h-12 rounded border cursor-pointer ${
-              selectedColor === color ? "border-black" : "border-transparent"
+              selectedColor && selectedColor.color === color.color
+                ? "border-black"
+                : "border-transparent"
             } flex items-center justify-center rounded-md cursor-pointer`}
           />
         ))}
@@ -27,7 +31,7 @@ export default function ProductDetailsColors({
       <input
         type="hidden"
         value={selectedColor ? selectedColor.color : ""}
-        {...register("color")}
+        {...register(`color`)}
       />
       {errors.color && <p className="text-red-500">{errors.color.message}</p>}
     </div>

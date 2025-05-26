@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 export default function CartSummary() {
   const totalPrice = useSelector((state) => state.cart.totalPrice);
   const cartItems = useSelector((state) => state.cart.cartItems);
+  const quantity = useSelector((state) => state.cart.quantity);
   const router = useRouter();
 
   function handleCheckout() {
@@ -30,7 +31,7 @@ export default function CartSummary() {
           <div className="space-y-4">
             <div className="flex flex-row justify-between">
               <div className="text-lg font-semibold">Items:</div>
-              <div className="text-lg">{cartItems.length}</div>
+              <div className="text-lg">{quantity}</div>
             </div>
             <div className="flex flex-row justify-between">
               <div className="text-lg font-semibold">Total:</div>
@@ -43,7 +44,7 @@ export default function CartSummary() {
               className="mt-4 w-full"
               disabled={cartItems.length === 0}
             >
-              Proceed to Checkout
+              Proceed to Shipping
             </Button>
           </div>
         </CardContent>

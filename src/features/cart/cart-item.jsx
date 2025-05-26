@@ -10,9 +10,10 @@ import {
   setCartItems,
   updateCartItemQuantity,
 } from "@/store/slices/cartSlice";
+import useFetchCart from "@/hooks/useFetchCart";
 
 export default function CartItem() {
-  const cartItems = useSelector((state) => state.cart.cartItems);
+  const { cartItems } = useFetchCart();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -86,7 +87,9 @@ export default function CartItem() {
                 </div>
                 <div>
                   {item.brandName} {item.modelName}
-                  <div className="text-sm text-gray-500">{item.color}</div>
+                  <div className="text-sm text-gray-500">
+                    {item.color} | {item.size}
+                  </div>
                 </div>
                 <div className="ml-auto flex items-center gap-4">
                   <div className="text-lg font-semibold">
