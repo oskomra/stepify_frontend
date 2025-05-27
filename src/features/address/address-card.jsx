@@ -1,6 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
-
-export default function AddressCard({ address, isSelected, onSelect }) {
+export default function AddressCard({ address }) {
   return (
     <div>
       <h3 className="text-lg font-semibold">{address?.street}</h3>

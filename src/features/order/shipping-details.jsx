@@ -10,11 +10,11 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import AddAddress from "../address/add-address";
+import AddAddress from "../address/address-add";
 import { useSelector, useDispatch } from "react-redux";
 import useFetchAddresses from "@/hooks/useFetchAddresses";
 import AddressCard from "../address/address-card";
-import ChangeAddress from "../address/change-address";
+import ChangeAddress from "../address/address-change";
 import UserCard from "../user/user-card";
 import UserEdit from "../user/user-edit";
 
@@ -22,7 +22,7 @@ export default function ShippingDetails() {
   const dispatch = useDispatch();
   const [isInpostSelected, setIsInpostSelected] = useState(false);
   const [isCourierSelected, setIsCourierSelected] = useState(true);
-  const { addresses, selectedAddress } = useFetchAddresses();
+  const { selectedAddress } = useFetchAddresses();
   const user = useSelector((state) => state.user);
 
   function handleRadioChange(value) {
@@ -31,11 +31,13 @@ export default function ShippingDetails() {
       setIsCourierSelected(false);
       dispatch({ type: "orders/reduceTotalPrice", payload: 5 });
       dispatch({ type: "orders/setDeliveryPrice", payload: 5 });
+      dispatch({ type: "orders/setDeliveryMethod", payload: "INPOST_PARCEL" });
     } else if (value === "courier") {
       setIsCourierSelected(true);
       setIsInpostSelected(false);
       dispatch({ type: "orders/addTotalPrice", payload: 5 });
       dispatch({ type: "orders/setDeliveryPrice", payload: 10 });
+      dispatch({ type: "orders/setDeliveryMethod", payload: "COURIER" });
     }
   }
 

@@ -1,5 +1,5 @@
 "use client";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useState } from "react";
 import useFetchAddresses from "@/hooks/useFetchAddresses";
 import { Label } from "@/components/ui/label";
@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/dialog";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent } from "@/components/ui/card";
-import DeleteAddress from "./delete-address";
-import EditAddress from "./edit-address";
+import DeleteAddress from "./address-delete";
+import EditAddress from "./address-edit";
 
 export default function ChangeAddress() {
   const dispatch = useDispatch();
