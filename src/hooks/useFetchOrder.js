@@ -35,20 +35,6 @@ export default function useFetchOrder() {
             type: "orders/setTotalPrice",
             payload: data.totalPrice + 10,
           });
-          dispatch({ type: "orders/setDate", payload: data.orderDate });
-          dispatch({ type: "orders/setStatus", payload: data.status });
-          dispatch({
-            type: "orders/setDeliveryMethod",
-            payload: data.deliveryMethod,
-          });
-          dispatch({
-            type: "orders/setDeliveryCompany",
-            payload: data.deliveryCompany,
-          });
-          dispatch({
-            type: "orders/setPaymentMethod",
-            payload: data.paymentMethod,
-          });
         }
       } catch (err) {
         setError(err);

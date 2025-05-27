@@ -4,7 +4,7 @@ import { faPen } from "@fortawesome/free-solid-svg-icons";
 export default function ModifyButton({ handleModifyOnClick }) {
   return (
     <div
-      className="gap-2 flex items-center text-gray-600 hover:text-gray-900 cursor-pointer hover:bg-gray-100 p-2 rounded-md"
+      className="text-sm font-medium gap-2 flex items-center text-gray-600 hover:text-gray-900 cursor-pointer hover:bg-gray-100 p-2 rounded-md"
       onClick={() => handleModifyOnClick()}
     >
       <FontAwesomeIcon

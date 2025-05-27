@@ -9,8 +9,8 @@ const ordersSlice = createSlice({
     shippingAddress: "",
     date: null,
     status: "",
-    deliveryMethod: "",
-    deliveryCompany: "",
+    deliveryMethod: "Courier",
+    deliveryCompany: "DHL",
     paymentMethod: "",
   },
   reducers: {

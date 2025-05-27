@@ -28,42 +28,44 @@ export default function Summary() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 px-4 md:px-12 lg:px-32 xl:px-32 py-25 items-start justify-center w-full">
+    <div className="flex flex-col lg:flex-row gap-8 px-4 md:px-12 lg:px-32 xl:px-96 py-25 items-start justify-center w-full">
       <div className="flex flex-col gap-8 w-full lg:w-2/3 pt-5">
         <div>
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl font-bold">
+              <CardTitle className="flex flex-row items-center justify-between text-xl font-bold">
                 Delivery Method
+                <ModifyButton handleModifyOnClick={handleModifyOnClick} />
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-row items-center justify-between p-4 pl-6">
+            <CardContent>
               <DeliveryCard />
-              <ModifyButton handleModifyOnClick={handleModifyOnClick} />
             </CardContent>
           </Card>
         </div>
         <div>
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl font-bold">Buyer details</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-row items-center justify-between p-4 pl-6">
-              <UserCard />
-              <ModifyButton handleModifyOnClick={handleModifyOnClick} />
-            </CardContent>
-          </Card>
-        </div>
-        <div>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-xl font-bold">
-                Shipping Details
+              <CardTitle className="flex flex-row items-center justify-between text-xl font-bold">
+                Buyer details
+                <ModifyButton handleModifyOnClick={handleModifyOnClick} />
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex flex-row items-center justify-between p-4 pl-6">
+            <CardContent className="p-4 pl-6">
+              <UserCard />
+            </CardContent>
+          </Card>
+        </div>
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex flex-row items-center justify-between text-xl font-bold">
+                Shipping Details
+                <ModifyButton handleModifyOnClick={handleModifyOnClick} />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
               <AddressCard address={selectedAddress} />
-              <ModifyButton handleModifyOnClick={handleModifyOnClick} />
             </CardContent>
           </Card>
         </div>
