@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import AddAddress from "../address/address-add";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,6 +19,7 @@ import UserCard from "../user/user-card";
 import UserEdit from "../user/user-edit";
 import OrderSummary from "./order-summary";
 import { useRouter } from "next/navigation";
+import RadioButton from "@/components/ui/radio-button";
 
 export default function ShippingDetails() {
   const dispatch = useDispatch();
@@ -28,19 +29,21 @@ export default function ShippingDetails() {
     useState("Courier");
   const [selectedDeliveryCompany, setSelectedDeliveryCompany] =
     useState("FedEx");
+  const [selectedPayment, setSelectedPayment] = useState("BLIK");
   const [shippingPrice, setShippingPrice] = useState(5);
   const { selectedAddress } = useFetchAddresses();
   const user = useSelector((state) => state.user);
+  const [lockerId, setLockerId] = useState("");
   const router = useRouter();
 
   function handleDeliveryMethodChange(value) {
-    if (value === "inpost_parcel") {
+    if (value === "Parcel") {
       setIsInpostSelected(true);
       setIsCourierSelected(false);
       setSelectedDeliveryMethod("Parcel");
       setSelectedDeliveryCompany("InPost");
       setShippingPrice(5);
-    } else if (value === "courier") {
+    } else if (value === "Courier") {
       setIsCourierSelected(true);
       setIsInpostSelected(false);
       setSelectedDeliveryMethod("Courier");
@@ -49,10 +52,13 @@ export default function ShippingDetails() {
 
   function handleDeliveryCompanyChange(value) {
     setSelectedDeliveryCompany(value);
-    dispatch({
-      type: "orders/setDeliveryCompany",
-      payload: value,
-    });
+    if (value === "FedEx") {
+      setShippingPrice(5);
+    } else if (value === "DPD") {
+      setShippingPrice(15);
+    } else if (value === "UPS") {
+      setShippingPrice(10);
+    }
   }
 
   function handleSubmitOnClick() {
@@ -61,15 +67,40 @@ export default function ShippingDetails() {
       payload: selectedDeliveryMethod,
     });
     dispatch({
-      type: "orders/setDeliveryCompany",
-      payload: selectedDeliveryCompany,
+      type: "orders/setDeliveryPrice",
+      payload: shippingPrice,
     });
-    router.push("/order/summary");
+    dispatch({
+      type: "orders/setPaymentMethod",
+      payload: selectedPayment,
+    });
+
+    if (selectedDeliveryMethod === "Courier") {
+      dispatch({
+        type: "orders/setDeliveryCompany",
+        payload: selectedDeliveryCompany,
+      });
+      router.push("/order/summary");
+    } else if (selectedDeliveryMethod === "Parcel") {
+      dispatch({
+        type: "orders/setDeliveryCompany",
+        payload: "InPost",
+      });
+      dispatch({
+        type: "orders/setParcelLockerId",
+        payload: lockerId,
+      });
+      router.push("/order/summary");
+    }
+  }
+
+  function handlePaymentChange(value) {
+    setSelectedPayment(value);
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 px-4 md:px-12 lg:px-32 xl:px-64 py-25 items-start justify-center w-full">
-      <div className="w-full lg:w-2/3 pt-5">
+    <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 px-2 sm:px-4 md:px-8 lg:px-16 xl:px-32 py-8 items-start justify-center w-full max-w-screen-2xl mx-auto">
+      <div className="flex flex-col gap-4 w-full lg:w-2/3 pt-4">
         <div className="flex flex-col gap-4">
           <Card>
             <CardHeader>
@@ -78,18 +109,24 @@ export default function ShippingDetails() {
             </CardHeader>
             <CardContent>
               <RadioGroup
-                defaultValue="courier"
+                defaultValue="Courier"
                 onValueChange={handleDeliveryMethodChange}
                 className="flex flex-col gap-4"
               >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="courier" id="courier" />
-                  <Label htmlFor="courier">Courier</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="inpost_parcel" id="inpost_parcel" />
-                  <Label htmlFor="inpost_parcel">InPost Parcel - $5</Label>
-                </div>
+                <RadioButton
+                  id="Courier"
+                  value="Courier"
+                  label="Courier"
+                  price="$0"
+                  isSelected={selectedDeliveryMethod === "Courier"}
+                />
+                <RadioButton
+                  id="Parcel"
+                  value="Parcel"
+                  label="InPost Parcel"
+                  price="$5"
+                  isSelected={selectedDeliveryMethod === "Parcel"}
+                />
               </RadioGroup>
 
               <div className="flex flex-col mt-4">
@@ -107,6 +144,8 @@ export default function ShippingDetails() {
                         type="text"
                         id="inpost_locker"
                         placeholder="Enter your InPost locker ID"
+                        value={lockerId}
+                        onChange={(e) => setLockerId(e.target.value)}
                       />
                     </CardContent>
                   </Card>
@@ -145,39 +184,84 @@ export default function ShippingDetails() {
                   onValueChange={handleDeliveryCompanyChange}
                   className="flex flex-col gap-4"
                 >
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="FedEx" id="FedEx" />
-                    <Label htmlFor="FedEx">FedEx - $5</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="DPD" id="DPD" />
-                    <Label htmlFor="DPD">DPD - $15</Label>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="UPS" id="UPS" />
-                    <Label htmlFor="UPS">UPS - $10</Label>
-                  </div>
+                  <RadioButton
+                    id="FedEx"
+                    value="FedEx"
+                    label="FedEx"
+                    price="5$"
+                    isSelected={selectedDeliveryCompany === "FedEx"}
+                  />
+                  <RadioButton
+                    id="DPD"
+                    value="DPD"
+                    label="DPD"
+                    price="15$"
+                    isSelected={selectedDeliveryCompany === "DPD"}
+                  />
+                  <RadioButton
+                    id="UPS"
+                    value="UPS"
+                    label="UPS"
+                    price="10$"
+                    isSelected={selectedDeliveryCompany === "UPS"}
+                  />
                 </RadioGroup>
               </CardContent>
             </Card>
           )}
           <Card>
             <CardHeader>
-              <CardTitle>Buyer Details</CardTitle>
+              <CardTitle className="flex flex-row items-center justify-between">
+                Buyer Details
+                <div className="flex justify-end mr-6">
+                  <UserEdit user={user} />
+                </div>
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex flex-row gap-4 items-center justify-between">
                 <UserCard />
-                <div className="flex justify-end mr-6">
-                  <UserEdit user={user} />
-                </div>
               </div>
             </CardContent>
           </Card>
+          <div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Payment</CardTitle>
+                <CardDescription></CardDescription>
+              </CardHeader>
+              <CardContent>
+                <RadioGroup
+                  defaultValue="BLIK"
+                  onValueChange={handlePaymentChange}
+                  className="flex flex-col gap-4"
+                >
+                  <RadioButton
+                    id="BLIK"
+                    value="BLIK"
+                    label="BLIK"
+                    price="0$"
+                    isSelected={selectedPayment === "BLIK"}
+                  />
+                  <RadioButton
+                    id="CreditCard"
+                    value="CreditCard"
+                    label="CreditCard"
+                    price="0$"
+                    isSelected={selectedPayment === "CreditCard"}
+                  />
+                </RadioGroup>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
-      <div className="w-full lg:w-1/3">
-        <OrderSummary handleSubmitOnClick={handleSubmitOnClick} />
+      <div className="w-full lg:w-1/3 mt-6 lg:mt-0">
+        <OrderSummary
+          handleSubmitOnClick={handleSubmitOnClick}
+          shippingPrice={shippingPrice}
+          disabled={!selectedAddress || !user}
+        />
       </div>
     </div>
   );

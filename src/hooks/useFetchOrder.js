@@ -33,7 +33,7 @@ export default function useFetchOrder() {
           });
           dispatch({
             type: "orders/setTotalPrice",
-            payload: data.totalPrice + 10,
+            payload: data.totalPrice,
           });
         }
       } catch (err) {

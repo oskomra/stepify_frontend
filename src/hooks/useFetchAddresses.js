@@ -1,6 +1,7 @@
 "use client";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
+import useFetchUser from "./useFetchUser";
 
 export default function useFetchAddresses() {
   const dispatch = useDispatch();
@@ -8,14 +9,17 @@ export default function useFetchAddresses() {
   const selectedAddress = useSelector(
     (state) => state.addresses.selectedAddress
   );
+  const { id } = useFetchUser();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!id) return;
+
     async function fetchAddresses() {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:8080/addresses", {
+        const response = await fetch(`http://localhost:8080/addresses/${id}`, {
           method: "GET",
           credentials: "include",
         });
@@ -37,7 +41,7 @@ export default function useFetchAddresses() {
     }
 
     fetchAddresses();
-  }, [dispatch]);
+  }, [dispatch, id, selectedAddress]);
 
   return {
     addresses,

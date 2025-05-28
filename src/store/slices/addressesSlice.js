@@ -21,6 +21,12 @@ const addressesSlice = createSlice({
     setSelectedAddress: (state, action) => {
       state.selectedAddress = action.payload;
     },
+    clearAddresses: (state) => {
+      state.addresses = [];
+    },
+    clearSelectedAddress: (state) => {
+      state.selectedAddress = null;
+    },
   },
 });
 

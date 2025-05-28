@@ -15,6 +15,7 @@ import {
   DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
+import ModifyButton from "@/components/ui/modify-button";
 
 const userSchema = Yup.object({
   email: Yup.string()
@@ -68,9 +69,7 @@ export default function UserEdit({ user }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
-          edit
-        </Button>
+        <ModifyButton handleModifyOnClick={() => setOpen(true)} />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

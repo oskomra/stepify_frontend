@@ -21,29 +21,26 @@ export default function ChangeAddress() {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const { addresses, selectedAddress } = useFetchAddresses();
-  const [tempSelectedAddress, setTempSelectedAddress] = useState(
-    selectedAddress?.id?.toString() || ""
-  );
 
-  const handleAddressSelect = (addressId) => {
-    setTempSelectedAddress(addressId);
+  const handleAddressSelect = (id) => {
+    const address = addresses.find((a) => a.id.toString() === id);
+    if (address) {
+      dispatch({
+        type: "addresses/setSelectedAddress",
+        payload: address,
+      });
+    }
   };
 
   const handleConfirm = () => {
-    const selectedAddr = addresses.find(
-      (addr) => addr.id === parseInt(tempSelectedAddress)
-    );
-    if (selectedAddr) {
-      dispatch({
-        type: "addresses/setSelectedAddress",
-        payload: selectedAddr,
-      });
-    }
+    dispatch({
+      type: "addresses/setSelectedAddress",
+      payload: selectedAddress,
+    });
     setOpen(false);
   };
 
   const handleCancel = () => {
-    setTempSelectedAddress(selectedAddress?.id?.toString() || "");
     setOpen(false);
   };
 
@@ -59,7 +56,7 @@ export default function ChangeAddress() {
         <div className="space-y-4">
           {addresses.length > 0 ? (
             <RadioGroup
-              value={tempSelectedAddress}
+              value={selectedAddress ? selectedAddress.id.toString() : ""}
               onValueChange={handleAddressSelect}
               className="space-y-4"
             >
@@ -67,7 +64,7 @@ export default function ChangeAddress() {
                 <div key={address.id}>
                   <Card
                     className={`cursor-pointer transition-colors hover:bg-gray-50 ${
-                      tempSelectedAddress === address.id.toString()
+                      selectedAddress && selectedAddress.id === address.id
                         ? "border-primary"
                         : ""
                     }`}
@@ -97,10 +94,7 @@ export default function ChangeAddress() {
                         <EditAddress address={address} />
                       </div>
                       <div className="flex justify-end mr-5">
-                        <DeleteAddress
-                          addressId={address.id}
-                          setTempSelectedAddress={setTempSelectedAddress}
-                        />
+                        <DeleteAddress addressId={address.id} />
                       </div>
                     </CardContent>
                   </Card>
@@ -117,11 +111,7 @@ export default function ChangeAddress() {
           <Button type="button" variant="outline" onClick={handleCancel}>
             Cancel
           </Button>
-          <Button
-            type="button"
-            onClick={handleConfirm}
-            disabled={!tempSelectedAddress}
-          >
+          <Button type="button" onClick={handleConfirm}>
             Confirm
           </Button>
         </DialogFooter>

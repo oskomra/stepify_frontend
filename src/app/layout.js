@@ -12,13 +12,13 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <AuthProvider initialToken={token}>
-          <ReduxProvider>
+        <ReduxProvider>
+          <AuthProvider initialToken={token}>
             <Navbar />
             <NavMenu />
             {children}
-          </ReduxProvider>
-        </AuthProvider>
+          </AuthProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

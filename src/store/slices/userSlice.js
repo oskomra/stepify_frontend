@@ -1,14 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { set } from "react-hook-form";
 
 const userSlice = createSlice({
   name: "user",
   initialState: {
+    id: "",
     email: "",
     name: "",
     lastName: "",
     phone: "",
   },
   reducers: {
+    setUserId: (state, action) => {
+      state.id = action.payload;
+    },
     setUserEmail: (state, action) => {
       state.email = action.payload;
     },

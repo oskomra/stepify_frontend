@@ -6,6 +6,7 @@ export default function SummaryCard({
   totalPrice,
   handleOnClick,
   submitText,
+  disabled,
 }) {
   return (
     <div>
@@ -19,9 +20,15 @@ export default function SummaryCard({
       </div>
       <div className="flex flex-row justify-between border-t-2 border-gray-200 pt-4">
         <div className="text-lg font-semibold">Total:</div>
-        <div className="text-lg font-semibold">${totalPrice.toFixed(2)}</div>
+        <div className="text-lg font-semibold">
+          ${productsPrice + deliveryPrice}
+        </div>
       </div>
-      <Button className="mt-4 w-full" onClick={() => handleOnClick()}>
+      <Button
+        className="mt-4 w-full"
+        disabled={disabled}
+        onClick={() => handleOnClick()}
+      >
         {submitText}
       </Button>
     </div>

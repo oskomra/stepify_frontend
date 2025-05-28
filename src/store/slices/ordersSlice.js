@@ -1,17 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { set } from "react-hook-form";
 
 const ordersSlice = createSlice({
   name: "orders",
   initialState: {
     orderItems: [],
     totalPrice: 0,
-    deliveryPrice: 10,
+    deliveryPrice: 0,
     shippingAddress: "",
     date: null,
     status: "",
     deliveryMethod: "Courier",
-    deliveryCompany: "DHL",
-    paymentMethod: "",
+    deliveryCompany: "FedEx",
+    parcelLockerId: "",
+    paymentMethod: "BLIK",
   },
   reducers: {
     setOrderItems: (state, action) => {
@@ -50,6 +52,9 @@ const ordersSlice = createSlice({
     },
     setPaymentMethod: (state, action) => {
       state.paymentMethod = action.payload;
+    },
+    setParcelLockerId: (state, action) => {
+      state.parcelLockerId = action.payload;
     },
   },
 });

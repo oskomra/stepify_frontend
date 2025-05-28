@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 
 const AuthContext = createContext({
   token: null,
@@ -12,6 +13,7 @@ const AuthContext = createContext({
 export default function AuthProvider({ children, initialToken }) {
   const [token, setToken] = useState(initialToken);
   const router = useRouter();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     axios.defaults.withCredentials = true;
@@ -23,7 +25,12 @@ export default function AuthProvider({ children, initialToken }) {
     else delete axios.defaults.headers.common["Authorization"];
   }, [token]);
 
-  const login = (newToken) => setToken(newToken);
+  const login = (newToken) => {
+    dispatch({ type: "addresses/clearAddresses" });
+    dispatch({ type: "addresses/clearSelectedAddress" });
+    setToken(newToken);
+  };
+
   const logout = async () => {
     try {
       const response = await fetch("http://localhost:8080/logout", {
@@ -32,6 +39,8 @@ export default function AuthProvider({ children, initialToken }) {
       });
       if (response.ok) {
         setToken(null);
+        dispatch({ type: "addresses/clearAddresses" });
+        dispatch({ type: "addresses/clearSelectedAddress" });
         router.push("/");
       }
       if (response.status === 401) {

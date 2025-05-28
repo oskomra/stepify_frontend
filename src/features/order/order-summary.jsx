@@ -7,7 +7,11 @@ import { useSelector } from "react-redux";
 import SummaryCard from "./summary-card";
 import OrderItem from "./order-items";
 
-export default function OrderSummary({ handleSubmitOnClick }) {
+export default function OrderSummary({
+  handleSubmitOnClick,
+  shippingPrice,
+  disabled,
+}) {
   const { orderItems, totalPrice } = useFetchOrder();
   const deliveryPrice = useSelector((state) => state.orders.deliveryPrice);
   const { totalPrice: productsPrice } = useFetchCart();
@@ -20,10 +24,11 @@ export default function OrderSummary({ handleSubmitOnClick }) {
             <OrderItem orderItems={orderItems} />
             <SummaryCard
               productsPrice={productsPrice}
-              deliveryPrice={deliveryPrice}
+              deliveryPrice={shippingPrice}
               totalPrice={totalPrice}
               handleOnClick={handleSubmitOnClick}
               submitText="Proceed to summary"
+              disabled={disabled}
             />
           </div>
         </CardContent>

@@ -11,6 +11,8 @@ import useFetchAddresses from "@/hooks/useFetchAddresses";
 import UserCard from "../user/user-card";
 import ModifyButton from "@/components/ui/modify-button";
 import DeliveryCard from "../order/delivery-card";
+import { useEffect } from "react";
+import PaymentCard from "../order/payment-card";
 
 export default function Summary() {
   const router = useRouter();
@@ -18,6 +20,17 @@ export default function Summary() {
   const { selectedAddress } = useFetchAddresses();
   const deliveryPrice = useSelector((state) => state.orders.deliveryPrice);
   const { totalPrice: productsPrice } = useFetchCart();
+
+  useEffect(() => {
+    if (
+      !orderItems ||
+      orderItems.length === 0 ||
+      !selectedAddress ||
+      !deliveryPrice
+    ) {
+      router.push("/order");
+    }
+  }, [orderItems, selectedAddress, deliveryPrice, router]);
 
   function handleProceedOnClick() {
     router.push("/payment");
@@ -28,8 +41,8 @@ export default function Summary() {
   }
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 px-4 md:px-12 lg:px-32 xl:px-96 py-25 items-start justify-center w-full">
-      <div className="flex flex-col gap-8 w-full lg:w-2/3 pt-5">
+    <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 px-2 sm:px-4 md:px-8 lg:px-16 xl:px-32 py-8 items-start justify-center w-full max-w-screen-2xl mx-auto">
+      <div className="flex flex-col gap-4 w-full lg:w-2/3 pt-4">
         <div>
           <Card>
             <CardHeader>
@@ -47,7 +60,7 @@ export default function Summary() {
           <Card>
             <CardHeader>
               <CardTitle className="flex flex-row items-center justify-between text-xl font-bold">
-                Buyer details
+                Buyer
                 <ModifyButton handleModifyOnClick={handleModifyOnClick} />
               </CardTitle>
             </CardHeader>
@@ -60,12 +73,25 @@ export default function Summary() {
           <Card>
             <CardHeader>
               <CardTitle className="flex flex-row items-center justify-between text-xl font-bold">
-                Shipping Details
+                Shipping
                 <ModifyButton handleModifyOnClick={handleModifyOnClick} />
               </CardTitle>
             </CardHeader>
             <CardContent>
               <AddressCard address={selectedAddress} />
+            </CardContent>
+          </Card>
+        </div>
+        <div>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex flex-row items-center justify-between text-xl font-bold">
+                Payment
+                <ModifyButton handleModifyOnClick={handleModifyOnClick} />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <PaymentCard />
             </CardContent>
           </Card>
         </div>

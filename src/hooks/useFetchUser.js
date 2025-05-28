@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 export default function useFetchUser() {
   const dispatch = useDispatch();
+  const id = useSelector((state) => state.user.id);
   const email = useSelector((state) => state.user.email);
   const name = useSelector((state) => state.user.name);
   const lastName = useSelector((state) => state.user.lastName);
@@ -18,6 +19,7 @@ export default function useFetchUser() {
         });
         if (response.ok) {
           const user = await response.json();
+          dispatch({ type: "user/setUserId", payload: user.id });
           dispatch({ type: "user/setUserEmail", payload: user.email });
           dispatch({ type: "user/setUserName", payload: user.name });
           dispatch({ type: "user/setUserLastName", payload: user.lastName });
@@ -31,5 +33,5 @@ export default function useFetchUser() {
     fetchUser();
   }, [dispatch]);
 
-  return { email, name, lastName, phone };
+  return { id, email, name, lastName, phone };
 }
