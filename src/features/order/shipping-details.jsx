@@ -244,11 +244,11 @@ export default function ShippingDetails() {
                     isSelected={selectedPayment === "BLIK"}
                   />
                   <RadioButton
-                    id="CreditCard"
-                    value="CreditCard"
-                    label="CreditCard"
+                    id="Credit_Card"
+                    value="Credit_Card"
+                    label="Credit Card"
                     price="0$"
-                    isSelected={selectedPayment === "CreditCard"}
+                    isSelected={selectedPayment === "Credit_Card"}
                   />
                 </RadioGroup>
               </CardContent>

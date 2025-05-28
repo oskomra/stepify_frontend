@@ -6,7 +6,6 @@ import useFetchProducts from "@/hooks/useFetchProducts";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 
 export default function ProductDashboard() {
   const [data, setData] = useState([]);
