@@ -58,9 +58,9 @@ export default function UserDropdownMenu() {
             <Button
               variant="ghost"
               className="relative flex w-full cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors hover:bg-neutral-700 hover:text-neutral-50 focus:bg-neutral-700 justify-start font-normal"
-              onClick={() => handleNavigation("orderData")}
+              onClick={() => handleNavigation("wishList")}
             >
-              Order data
+              Wish Lists
             </Button>
             <div className="mx-1 my-1 h-px bg-neutral-500"></div>
             {isLoggedIn ? (

@@ -43,14 +43,14 @@ export default function UserSidebarPage({ selectedPage = "account" }) {
           Addresses
         </Link>
         <Link
-          href="#"
+          href="/wishList"
           className={`relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors duration-150 ease-in-out hover:bg-neutral-700 hover:text-neutral-50 focus:bg-neutral-700 ${
-            selected === "orderData" ? "bg-neutral-700 text-neutral-50" : ""
+            selected === "wishList" ? "bg-neutral-700 text-neutral-50" : ""
           }`}
           prefetch={false}
-          onClick={() => setSelected("orderData")}
+          onClick={() => setSelected("wishList")}
         >
-          Order data
+          Wish Lists
         </Link>
       </nav>
     </div>

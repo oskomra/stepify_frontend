@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { set } from "react-hook-form";
 
 const cartSlice = createSlice({
   name: "cart",
   initialState: {
     cartItems: [],
     totalPrice: 0,
+    discountTotal: 0,
+    finalPrice: 0,
     quantity: 0,
   },
   reducers: {
@@ -83,6 +84,15 @@ const cartSlice = createSlice({
     },
     setCartQuantity: (state, action) => {
       state.quantity = action.payload;
+    },
+    setTotalPrice: (state, action) => {
+      state.totalPrice = action.payload;
+    },
+    setFinalPrice: (state, action) => {
+      state.finalPrice = action.payload;
+    },
+    setDiscountTotal: (state, action) => {
+      state.discountTotal = action.payload;
     },
   },
 });

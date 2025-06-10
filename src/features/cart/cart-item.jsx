@@ -13,6 +13,7 @@ import {
 import useFetchCart from "@/hooks/useFetchCart";
 import useFetchProducts from "@/hooks/useFetchProducts";
 import Link from "next/link";
+import { updateCartData } from "@/utils/updateCartData";
 
 export default function CartItem() {
   const { cartItems } = useFetchCart();
@@ -20,20 +21,7 @@ export default function CartItem() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/cart", {
-          credentials: "include",
-        });
-        if (response.ok) {
-          const cartData = await response.json();
-          dispatch(setCartItems(cartData.cartItems));
-        }
-      } catch (error) {
-        console.error("Error fetching cart:", error);
-      }
-    };
-    fetchCart();
+    updateCartData(dispatch);
   }, [dispatch]);
 
   const handleStockValidation = (itemId, color, size, quantity) => {
@@ -64,6 +52,7 @@ export default function CartItem() {
       });
       if (response.ok) {
         dispatch(removeCartItem(itemId));
+        await updateCartData(dispatch);
       }
     } catch (error) {
       console.error("Error removing item:", error);
@@ -82,6 +71,7 @@ export default function CartItem() {
       );
       if (response.ok) {
         dispatch(updateCartItemQuantity({ itemId, quantity: newQuantity }));
+        await updateCartData(dispatch);
       }
     } catch (error) {
       console.error("Error updating quantity:", error);

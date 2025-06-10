@@ -1,6 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
-import { Package, ShoppingCart, Users, LayoutDashboard } from "lucide-react";
+import {
+  Package,
+  ShoppingCart,
+  Users,
+  LayoutDashboard,
+  TagIcon,
+} from "lucide-react";
 
 const links = [
   {
@@ -21,6 +27,12 @@ const links = [
     href: "/dashboard/users",
     icon: <Users className="w-5 h-5 mr-3" />,
   },
+  {
+    key: "promotions",
+    label: "Promotions",
+    href: "/dashboard/promotions",
+    icon: <TagIcon className="w-5 h-5 mr-3" />,
+  },
 ];
 
 export default function DashboardSidebar({ selectedPage = "products" }) {
@@ -31,9 +43,9 @@ export default function DashboardSidebar({ selectedPage = "products" }) {
   }, [selectedPage]);
 
   return (
-    <aside className="flex flex-col min-h-full bg-gradient-to-b from-neutral-900 via-neutral-800 to-neutral-800 text-white lg:border-r border-neutral-700 shadow-lg sticky top-0 w-full">
+    <aside className="flex flex-col min-h-full bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 text-white lg:border-r border-neutral-700 shadow-lg sticky top-0 w-full">
       <div className="flex items-center gap-3 px-6 py-6 border-b border-neutral-700 mb-2">
-        <LayoutDashboard className="w-7 h-7 text-primary" />
+        <LayoutDashboard className="w-7 h-7 text-primary bg-neutral-300" />
         <span className="text-xl font-bold tracking-tight">Dashboard</span>
       </div>
       <nav className="flex flex-col gap-1 px-2 py-2">
