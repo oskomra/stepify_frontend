@@ -2,9 +2,10 @@ import { cookies } from "next/headers";
 import Payment from "@/features/payment/payment";
 import { notFound } from "next/navigation";
 export default async function PaymentPage({ params }) {
-  const { orderId } = params;
+  const { orderId } = await params;
 
-  const cookieHeader = cookies().toString();
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.toString();
 
   const response = await fetch(`http://localhost:8080/order/${orderId}`, {
     headers: {
@@ -32,7 +33,7 @@ export default async function PaymentPage({ params }) {
   }
 
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center py-25">
       <Payment order={order} />
     </div>
   );

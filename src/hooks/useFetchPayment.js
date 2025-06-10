@@ -6,14 +6,22 @@ export default function useFetchPayment(id) {
   const [payment, setPayment] = useState(null);
 
   useEffect(() => {
-    const fetchPayment = async () => {
-      const response = await fetch(`http://localhost:8080/payment/${id}`);
-      const data = await response.json();
-      setPayment(data);
-    };
+    if (!id) return;
 
+    const fetchPayment = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/payment/${id}`, {
+          credentials: "include",
+        });
+        if (!response.ok) throw new Error("Failed to fetch payment");
+        const data = await response.json();
+        setPayment(data);
+      } catch (error) {
+        setPayment(null);
+      }
+    };
     fetchPayment();
-  }, []);
+  }, [id]);
 
   return payment;
 }

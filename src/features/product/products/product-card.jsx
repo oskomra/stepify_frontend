@@ -8,6 +8,11 @@ export default function ProductCard({ product }) {
   const selectedVariant = product.colors[selectedColorIndex];
   const router = useRouter();
 
+  const productWithSelectedPrice = {
+    ...product,
+    selectedPrice: selectedVariant.price,
+  };
+
   const handleCardClick = () => {
     router.push(`/products/${product.brandName}/${product.modelName}`);
   };

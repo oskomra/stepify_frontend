@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { Card, CardContent } from "@/components/ui/card";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import {
   removeCartItem,
@@ -11,9 +11,12 @@ import {
   updateCartItemQuantity,
 } from "@/store/slices/cartSlice";
 import useFetchCart from "@/hooks/useFetchCart";
+import useFetchProducts from "@/hooks/useFetchProducts";
+import Link from "next/link";
 
 export default function CartItem() {
   const { cartItems } = useFetchCart();
+  const { products, loading: productsLoading } = useFetchProducts();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -32,6 +35,26 @@ export default function CartItem() {
     };
     fetchCart();
   }, [dispatch]);
+
+  const handleStockValidation = (itemId, color, size, quantity) => {
+    const cartItem = cartItems.find((item) => item.id === itemId);
+    if (!cartItem) return false;
+
+    const product = products.find((p) => p.id === cartItem.productId);
+    if (!product) return false;
+
+    const productColor = product.colors.find(
+      (c) => c.color.toLowerCase() === color.toLowerCase()
+    );
+    if (!productColor) return false;
+
+    const sizeObj = productColor.sizes.find(
+      (s) => parseFloat(s.size) === parseFloat(size)
+    );
+    if (!sizeObj) return false;
+
+    return quantity > sizeObj.stock;
+  };
 
   const handleRemoveItem = async (itemId) => {
     try {
@@ -70,10 +93,13 @@ export default function CartItem() {
       {cartItems.length === 0 ? (
         <div className="text-center py-8">
           <p className="text-gray-500">Your cart is empty</p>
+          <Link href="/products" className=" text-blue-500 hover:underline">
+            Browse products
+          </Link>
         </div>
       ) : (
         cartItems.map((item) => (
-          <Card key={item.id}>
+          <Card key={item.id || `${item.modelName}-${item.color}-${item.size}`}>
             <CardContent>
               <div className="flex flex-row items-center w-full gap-5">
                 <div>
@@ -115,6 +141,15 @@ export default function CartItem() {
                       size="sm"
                       onClick={() =>
                         handleQuantityChange(item.id, item.quantity + 1)
+                      }
+                      disabled={
+                        productsLoading ||
+                        handleStockValidation(
+                          item.id,
+                          item.color,
+                          item.size,
+                          item.quantity + 1
+                        )
                       }
                     >
                       +

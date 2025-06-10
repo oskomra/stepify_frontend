@@ -4,17 +4,17 @@ export default function sortProducts(products, sortOption) {
   switch (sortOption) {
     case "price-asc":
       sorted.sort((a, b) => {
-        const aMax = Math.max(...a.colors.map((c) => c.price));
-        const bMax = Math.max(...b.colors.map((c) => c.price));
-        return aMax - bMax;
+        const aPrice = a.selectedPrice || a.colors[0].price;
+        const bPrice = b.selectedPrice || b.colors[0].price;
+        return aPrice - bPrice;
       });
       break;
 
     case "price-desc":
       sorted.sort((a, b) => {
-        const aMax = Math.max(...a.colors.map((c) => c.price));
-        const bMax = Math.max(...b.colors.map((c) => c.price));
-        return bMax - aMax;
+        const aPrice = a.selectedPrice || a.colors[0].price;
+        const bPrice = b.selectedPrice || b.colors[0].price;
+        return bPrice - aPrice;
       });
       break;
 

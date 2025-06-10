@@ -7,10 +7,10 @@ import ProductSort from "@/features/product/products/product-sort";
 export default function ProductPage() {
   return (
     <div className="flex flex-row flex-nowrap gap-8 px-50 py-25 item-center justify-center">
-      <div className="basis=1/3 w-40">
+      <div className="basis-1/6">
         <ProductFilter />
       </div>
-      <div className="basis-2/3">
+      <div className="basis-5/6">
         <div className="flex">
           <div className="basis-2/3">
             <ProductSearch />

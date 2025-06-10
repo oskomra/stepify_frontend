@@ -16,6 +16,7 @@ export default function AddSize({ color, product, setProduct }) {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(sizeSchema),
@@ -47,8 +48,19 @@ export default function AddSize({ color, product, setProduct }) {
           colors: updatedColors,
         }));
       }
+      if (response.status === 400) {
+        const errorData = await response.json();
+        setError("root.serverError", {
+          type: "manual",
+          message:
+            errorData.message || "Invalid input. Please check your data.",
+        });
+      }
     } catch (error) {
-      console.error("Error adding size variant:", error);
+      setError("root.serverError", {
+        type: "manual",
+        message: "An error occurred. Please try again.",
+      });
     }
   }
 
@@ -75,6 +87,11 @@ export default function AddSize({ color, product, setProduct }) {
         />
         <Button type="submit">Add size</Button>
       </form>
+      {errors.root?.serverError && (
+        <p className="mt-4 text-sm text-red-500 text-center">
+          {errors.root.serverError.message}
+        </p>
+      )}
     </div>
   );
 }

@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useDispatch } from "react-redux";
 import { useAuth } from "@/provider/AuthProvider";
+import useFetchCart from "@/hooks/useFetchCart";
 
 const loginSchema = Yup.object({
   email: Yup.string()
@@ -57,6 +58,28 @@ export function LoginForm({ className, ...props }) {
         dispatch({ type: "user/setUserName", payload: data.user.name });
         dispatch({ type: "user/setUserLastName", payload: data.user.lastName });
         dispatch({ type: "user/setUserPhone", payload: data.user.phone });
+
+        try {
+          const cartResponse = await fetch("http://localhost:8080/cart", {
+            method: "GET",
+            credentials: "include",
+            headers: {
+              Authorization: `Bearer ${data.token}`,
+            },
+          });
+
+          if (cartResponse.ok) {
+            const cartData = await cartResponse.json();
+            // Update cart in Redux
+            dispatch({
+              type: "cart/setCartItems",
+              payload: cartData.cartItems,
+            });
+          }
+        } catch (err) {
+          console.error("Failed to fetch cart after login:", err);
+        }
+
         router.push("/");
       } else {
         if (response.status === 401) {
