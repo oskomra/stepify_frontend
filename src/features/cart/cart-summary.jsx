@@ -7,11 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useSelector, useDispatch } from "react-redux"; // Add dispatch
+import { useSelector, useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 import PromotionApply from "../promotions/promotion-apply";
-import { useEffect, useRef } from "react"; // Add this import
-import { updateCartData } from "@/utils/updateCartData"; // Add this import
+import { useEffect, useRef } from "react";
+import { updateCartData } from "@/utils/updateCartData";
 
 export default function CartSummary() {
   const dispatch = useDispatch(); // Add this

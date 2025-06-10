@@ -1,7 +1,5 @@
-import { MoreHorizontal } from "lucide-react";
-import { ArrowUpDown } from "lucide-react";
+"use client";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,86 +8,90 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
+import { MoreHorizontal, Eye, RefreshCw } from "lucide-react";
+import { format } from "date-fns";
 
-export const columns = (handleOrderCancel, handleOrderDetails) => [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+const getStatusColor = (status) => {
+  switch (status) {
+    case "PENDING":
+      return "warning";
+    case "PROCESSING":
+      return "info";
+    case "SHIPPED":
+      return "secondary";
+    case "DELIVERED":
+      return "success";
+    case "CANCELLED":
+      return "destructive";
+    default:
+      return "outline";
+  }
+};
+
+export const columns = (onStatusUpdate, onViewDetails) => [
   {
     accessorKey: "id",
     header: "Order ID",
+    cell: ({ row }) => <div className="font-medium">#{row.original.id}</div>,
   },
   {
     accessorKey: "userId",
-    header: "User ID",
-  },
-  {
-    accessorKey: "totalPrice",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Total Price
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-  },
-  {
-    accessorKey: "quantity",
-    header: "Quantity",
+    header: "Customer ID",
+    cell: ({ row }) => <div className="font-medium">{row.original.userId}</div>,
   },
   {
     accessorKey: "orderDate",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Order Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: "Order Date",
+    cell: ({ row }) => (
+      <div>
+        {format(new Date(row.original.orderDate), "MMM d, yyyy")}
+        <div className="text-sm text-muted-foreground">
+          {format(new Date(row.original.orderDate), "h:mm a")}
+        </div>
+      </div>
+    ),
   },
   {
     accessorKey: "status",
     header: "Status",
+    cell: ({ row }) => (
+      <Badge variant={getStatusColor(row.original.status)}>
+        {row.original.status}
+      </Badge>
+    ),
+  },
+  {
+    accessorKey: "totalPrice",
+    header: "Total",
+    cell: ({ row }) => (
+      <div className="font-medium">
+        ${row.original.totalPrice.toFixed(2)}
+        <div className="text-sm text-muted-foreground">
+          {row.original.quantity} items
+        </div>
+      </div>
+    ),
   },
   {
     accessorKey: "deliveryMethod",
-    header: "Delivery Method",
-  },
-  {
-    accessorKey: "deliveryCompany",
-    header: "Delivery Company",
+    header: "Delivery",
+    cell: ({ row }) => (
+      <div>
+        <div className="font-medium">{row.original.deliveryMethod}</div>
+        {row.original.deliveryCompany && (
+          <div className="text-sm text-muted-foreground">
+            {row.original.deliveryCompany}
+          </div>
+        )}
+      </div>
+    ),
   },
   {
     id: "actions",
-    header: "Actions",
     cell: ({ row }) => {
+      const order = row.original;
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -100,17 +102,14 @@ export const columns = (handleOrderCancel, handleOrderDetails) => [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => handleOrderDetails(row.original.id)}
-            >
-              Details
-            </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => handleOrderCancel(row.original.id)}
-              className="text-red-400"
-            >
-              Cancel Order
+            <DropdownMenuItem onClick={() => onViewDetails(order.id)}>
+              <Eye className="mr-2 h-4 w-4" />
+              View Details
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onStatusUpdate(order.id)}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Update Status
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

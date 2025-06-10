@@ -7,6 +7,8 @@ import {
   LayoutDashboard,
   TagIcon,
 } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const links = [
   {
@@ -37,17 +39,31 @@ const links = [
 
 export default function DashboardSidebar({ selectedPage = "products" }) {
   const [selected, setSelected] = useState(selectedPage);
+  const pathname = usePathname();
 
   useEffect(() => {
-    setSelected(selectedPage);
-  }, [selectedPage]);
+    if (pathname === "/dashboard") {
+      setSelected("dashboard");
+    } else {
+      setSelected(selectedPage);
+    }
+  }, [selectedPage, pathname]);
+
+  const isDashboardSelected = selected === "dashboard";
 
   return (
     <aside className="flex flex-col min-h-full bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 text-white lg:border-r border-neutral-700 shadow-lg sticky top-0 w-full">
-      <div className="flex items-center gap-3 px-6 py-6 border-b border-neutral-700 mb-2">
+      <Link
+        href="/dashboard"
+        className={`group relative flex items-center gap-3 px-6 py-6 border-b border-neutral-700 mb-2 transition-colors
+          ${isDashboardSelected ? "bg-neutral-700" : "hover:bg-neutral-700"}`}
+      >
         <LayoutDashboard className="w-7 h-7 text-primary bg-neutral-300" />
         <span className="text-xl font-bold tracking-tight">Dashboard</span>
-      </div>
+        {isDashboardSelected && (
+          <span className="absolute left-0 top-0 h-full w-1 bg-primary rounded-r-lg" />
+        )}
+      </Link>
       <nav className="flex flex-col gap-1 px-2 py-2">
         {links.map((link) => (
           <a

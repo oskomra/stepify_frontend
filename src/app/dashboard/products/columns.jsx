@@ -1,5 +1,4 @@
-import { MoreHorizontal } from "lucide-react";
-import { ArrowUpDown } from "lucide-react";
+import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -10,6 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 
 export const columns = (handleProductDelete, handleProductEdit) => [
   {
@@ -42,7 +42,7 @@ export const columns = (handleProductDelete, handleProductEdit) => [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Id
+          ID
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
@@ -50,15 +50,124 @@ export const columns = (handleProductDelete, handleProductEdit) => [
   },
   {
     accessorKey: "brandName",
-    header: "Brand Name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Brand
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "modelName",
-    header: "Model Name",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Model
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Category
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <Badge variant="outline" className="capitalize">
+          {row.original.category.toLowerCase()}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "gender",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Gender
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <Badge variant="outline" className="capitalize">
+          {row.original.gender.toLowerCase()}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "totalStock",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Stock
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const stock = row.original.totalStock;
+      return (
+        <Badge
+          variant={
+            stock < 10 ? "destructive" : stock < 20 ? "warning" : "outline"
+          }
+        >
+          {stock}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "lowestPrice",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Price Range
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const lowest = row.original.lowestPrice;
+      const highest = row.original.highestPrice;
+      return (
+        <div className="text-sm">
+          {lowest === highest
+            ? `$${lowest.toFixed(2)}`
+            : `$${lowest.toFixed(2)} - $${highest.toFixed(2)}`}
+        </div>
+      );
+    },
   },
   {
     id: "actions",
@@ -76,6 +185,7 @@ export const columns = (handleProductDelete, handleProductEdit) => [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => handleProductDelete(row.original.id)}
+              className="text-red-600"
             >
               Delete product
             </DropdownMenuItem>
@@ -89,6 +199,16 @@ export const columns = (handleProductDelete, handleProductEdit) => [
               }
             >
               Edit product
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() =>
+                window.open(
+                  `/products/${row.original.brandName}/${row.original.modelName}`,
+                  "_blank"
+                )
+              }
+            >
+              View product
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

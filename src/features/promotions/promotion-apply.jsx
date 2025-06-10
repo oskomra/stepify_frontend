@@ -25,6 +25,7 @@ export default function PromotionApply() {
     handleSubmit,
     formState: { errors },
     reset,
+    setError,
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
@@ -42,10 +43,23 @@ export default function PromotionApply() {
       if (response.ok) {
         await updateCartData(dispatch);
         reset();
+      } else if (response.status === 422) {
+        const errorData = await response.json();
+        setError("root.serverError", {
+          type: "manual",
+          message: errorData.message || "Invalid promotion code",
+        });
+      } else if (response.status === 404) {
+        setError("root.serverError", {
+          type: "manual",
+          message: "Promotion code not found",
+        });
       }
     } catch (error) {
-      console.error("Error applying promotion:", error);
-      return;
+      setError("root.serverError", {
+        type: "manual",
+        message: "An error occurred. Please try again.",
+      });
     }
   }
 
@@ -63,7 +77,14 @@ export default function PromotionApply() {
             className="w-full mb-2"
             {...register("code")}
           />
-          <Button className="w-full">Apply</Button>
+          <Button variant="outline" className="w-full">
+            Apply
+          </Button>
+          {errors.root?.serverError && (
+            <p className="mt-4 text-sm text-red-500 text-center">
+              {errors.root.serverError.message}
+            </p>
+          )}
         </form>
       </CardContent>
     </Card>
