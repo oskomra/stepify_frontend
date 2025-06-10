@@ -7,6 +7,7 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import AddSize from "./add-size";
 export default function SizeEdit({ color, product, setProduct }) {
+  const [errors, setErrors] = useState({});
   const [stockValues, setStockValues] = useState(() =>
     Object.fromEntries(color.sizes.map((s) => [s.id, s.stock]))
   );
@@ -60,57 +61,67 @@ export default function SizeEdit({ color, product, setProduct }) {
         }));
       } else if (response.status === 400) {
         const errorData = await response.json();
-        console.error("Error updating size stock:", errorData);
+        setErrors((prev) => ({
+          ...prev,
+          [size.id]: errorData.message || "Invalid stock value",
+        }));
       }
     } catch (error) {
-      console.error("Error updating size stock:", error);
+      setErrors((prev) => ({
+        ...prev,
+        [size.id]: "Network error when updating stock",
+      }));
     }
   }
 
   return (
     <div>
       {color.sizes.map((size) => (
-        <div
-          key={size.id}
-          className="flex flex-row space-x-4 pt-4 items-center"
-        >
-          <Label htmlFor={`size-${size.id}`}>Size</Label>
-          <Input
-            id={`size-${size.id}`}
-            type="text"
-            placeholder="Size"
-            value={size.size}
-            disabled
-          />
-          <Label htmlFor={`stock-${size.id}`}>Stock</Label>
-          <Input
-            id={`stock-${size.id}`}
-            type="number"
-            placeholder="Stock"
-            value={stockValues[size.id] ?? ""}
-            onChange={(e) =>
-              setStockValues((vals) => ({
-                ...vals,
-                [size.id]: e.target.value,
-              }))
-            }
-          />
-          <Button
-            type="button"
-            variant="destructive"
-            className="bg-green-500 text-white hover:bg-green-400"
-            onClick={() => handleEditStock(size)}
-          >
-            <FontAwesomeIcon icon={faPen} className="" />
-          </Button>
-          <Button
-            type="button"
-            variant="destructive"
-            onClick={() => handleDeleteSize(size.id)}
-            className="bg-red-500 text-white hover:bg-red-400"
-          >
-            <FontAwesomeIcon icon={faTrash} className="" />
-          </Button>
+        <div key={size.id}>
+          <div className="flex flex-row space-x-4 pt-4 items-center">
+            <Label htmlFor={`size-${size.id}`}>Size</Label>
+            <Input
+              id={`size-${size.id}`}
+              type="text"
+              placeholder="Size"
+              value={size.size}
+              disabled
+            />
+            <Label htmlFor={`stock-${size.id}`}>Stock</Label>
+            <Input
+              id={`stock-${size.id}`}
+              type="number"
+              placeholder={size.stock}
+              value={stockValues[size.id] ?? ""}
+              onChange={(e) =>
+                setStockValues((vals) => ({
+                  ...vals,
+                  [size.id]: e.target.value,
+                }))
+              }
+            />
+            <Button
+              type="button"
+              variant="destructive"
+              className="bg-green-500 text-white hover:bg-green-400"
+              onClick={() => handleEditStock(size)}
+            >
+              <FontAwesomeIcon icon={faPen} className="" />
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => handleDeleteSize(size.id)}
+              className="bg-red-500 text-white hover:bg-red-400"
+            >
+              <FontAwesomeIcon icon={faTrash} className="" />
+            </Button>
+          </div>
+          {errors[size.id] && (
+            <p className="text-sm text-red-500 ml-24 mt-1 flex justify-center mr-40">
+              {errors[size.id]}
+            </p>
+          )}
         </div>
       ))}
 

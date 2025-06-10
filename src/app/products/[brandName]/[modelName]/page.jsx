@@ -18,7 +18,7 @@ export default async function ProductDetailsPage({ params }) {
   const product = await response.json();
 
   return (
-    <div className="flex flex-row px-75 py-25">
+    <div className="px-4 py-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24">
       <ProductDetails product={product} />
     </div>
   );

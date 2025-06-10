@@ -41,6 +41,9 @@ export default function AuthProvider({ children, initialToken }) {
         setToken(null);
         dispatch({ type: "addresses/clearAddresses" });
         dispatch({ type: "addresses/clearSelectedAddress" });
+        dispatch({ type: "cart/clearCart" });
+        dispatch({ type: "cart/setCartQuantity", payload: 0 });
+
         router.push("/");
       }
       if (response.status === 401) {

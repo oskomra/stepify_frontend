@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { set } from "react-hook-form";
 
 const cartSlice = createSlice({
   name: "cart",
@@ -9,13 +10,34 @@ const cartSlice = createSlice({
   },
   reducers: {
     addCartItem: (state, action) => {
-      const item = action.payload;
-      state.cartItems.push(item);
+      const newItem = action.payload;
+
+      const uniqueId = `${newItem.modelName}-${newItem.color}-${newItem.size}`;
+
+      const existingItemIndex = state.cartItems.findIndex(
+        (item) =>
+          item.modelName === newItem.modelName &&
+          item.color === newItem.color &&
+          item.size === newItem.size
+      );
+
+      if (existingItemIndex >= 0) {
+        state.cartItems[existingItemIndex].quantity += newItem.quantity;
+      } else {
+        state.cartItems.push({
+          ...newItem,
+          id: uniqueId,
+        });
+      }
+
       state.totalPrice = state.cartItems.reduce(
         (total, item) => total + item.price * item.quantity,
         0
       );
-      state.quantity += item.quantity;
+      state.quantity = state.cartItems.reduce(
+        (total, item) => total + item.quantity,
+        0
+      );
     },
     setCartItems: (state, action) => {
       state.cartItems = action.payload;
@@ -58,6 +80,9 @@ const cartSlice = createSlice({
     clearCart: (state) => {
       state.cartItems = [];
       state.totalPrice = 0;
+    },
+    setCartQuantity: (state, action) => {
+      state.quantity = action.payload;
     },
   },
 });

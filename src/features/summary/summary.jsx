@@ -19,6 +19,10 @@ export default function Summary() {
   const { orderItems, totalPrice } = useFetchOrder();
   const { selectedAddress } = useFetchAddresses();
   const deliveryPrice = useSelector((state) => state.orders.deliveryPrice);
+  const deliveryMethod = useSelector((state) => state.orders.deliveryMethod);
+  const deliveryCompany = useSelector((state) => state.orders.deliveryCompany);
+  const paymentMethod = useSelector((state) => state.orders.paymentMethod);
+  const parcelLockerId = useSelector((state) => state.orders.parcelLockerId);
   const { totalPrice: productsPrice } = useFetchCart();
 
   useEffect(() => {
@@ -32,8 +36,37 @@ export default function Summary() {
     }
   }, [orderItems, selectedAddress, deliveryPrice, router]);
 
-  function handleProceedOnClick() {
-    router.push("/payment");
+  async function handleProceedOnClick() {
+    const orderData = {
+      orderItems,
+      totalPrice,
+      shippingAddress: selectedAddress,
+      deliveryMethod: deliveryMethod.toUpperCase(),
+      deliveryCompany,
+      parcelLockerId,
+      payment: {
+        paymentMethod: paymentMethod.toUpperCase(),
+      },
+    };
+
+    try {
+      const response = await fetch("http://localhost:8080/order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(orderData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Order saved successfully:", data);
+        router.push(`http://localhost:3000/payment/${data.id}`);
+      }
+    } catch (error) {
+      console.error("Error saving order:", error);
+    }
   }
 
   function handleModifyOnClick() {

@@ -51,6 +51,10 @@ export default function EditAddress({ address }) {
         const newAddress = await response.json();
         dispatch({ type: "addresses/removeAddress", payload: address.id });
         dispatch({ type: "addresses/addAddress", payload: newAddress });
+        dispatch({
+          type: "addresses/setSelectedAddress",
+          payload: newAddress,
+        });
         setOpen(false);
         reset();
       }

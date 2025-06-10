@@ -4,7 +4,7 @@ export default function OrderItem({ orderItems }) {
       {orderItems.map((item) => (
         <div
           className="flex flex-col justify-between border-b-2 border-gray-200 py-2"
-          key={`${item.brandName}-${item.modelName}-${item.color}-${item.size}`}
+          key={item.id || `${item.modelName}-${item.color}-${item.size}`}
         >
           <div className="flex flex-row items-center w-full gap-5 h-14">
             <div>

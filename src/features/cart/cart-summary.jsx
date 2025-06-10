@@ -36,7 +36,7 @@ export default function CartSummary() {
             <div className="flex flex-row justify-between">
               <div className="text-lg font-semibold">Total:</div>
               <div className="text-lg font-semibold">
-                ${totalPrice.toFixed(2)}
+                {`$${isNaN(totalPrice) ? "0.00" : totalPrice.toFixed(2)}`}
               </div>
             </div>
             <Button

@@ -17,8 +17,10 @@ export default async function EditProductPage({ params }) {
   const product = await response.json();
 
   return (
-    <div className="flex flex-row px-75 py-25">
-      <EditProduct productDetails={product} />
+    <div className="flex flex-col items-center w-full min-h-screen px-2 py-6 sm:px-4 md:px-8 lg:px-16 xl:px-32 bg-background">
+      <div className="w-full max-w-5xl">
+        <EditProduct productDetails={product} />
+      </div>
     </div>
   );
 }

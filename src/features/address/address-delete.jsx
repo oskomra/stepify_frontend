@@ -3,13 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@/components/ui/button";
-import { set } from "react-hook-form";
 
-export default function DeleteAddress({ addressId, setTempSelectedAddress }) {
+export default function DeleteAddress({ addressId }) {
   const dispatch = useDispatch();
-  const selectedAddress = useSelector(
-    (state) => state.addresses.selectedAddress
-  );
   const addresses = useSelector((state) => state.addresses.addresses);
 
   async function handleDeleteAddress(event) {
@@ -35,13 +31,11 @@ export default function DeleteAddress({ addressId, setTempSelectedAddress }) {
             type: "addresses/setSelectedAddress",
             payload: updatedAddresses[0],
           });
-          setTempSelectedAddress(updatedAddresses[0].id.toString());
         } else {
           dispatch({
             type: "addresses/setSelectedAddress",
             payload: null,
           });
-          setTempSelectedAddress("");
         }
       }
     } catch (error) {
