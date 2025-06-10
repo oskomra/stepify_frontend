@@ -56,6 +56,31 @@ const ordersSlice = createSlice({
     setParcelLockerId: (state, action) => {
       state.parcelLockerId = action.payload;
     },
+    setOrder: (state, action) => {
+      const {
+        orderItems,
+        totalPrice,
+        deliveryPrice,
+        shippingAddress,
+        date,
+        status,
+        deliveryMethod,
+        deliveryCompany,
+        parcelLockerId,
+        paymentMethod,
+      } = action.payload;
+
+      state.orderItems = orderItems || state.orderItems;
+      state.totalPrice = totalPrice || state.totalPrice;
+      state.deliveryPrice = deliveryPrice || state.deliveryPrice;
+      state.shippingAddress = shippingAddress || state.shippingAddress;
+      state.date = date || state.date;
+      state.status = status || state.status;
+      state.deliveryMethod = deliveryMethod || state.deliveryMethod;
+      state.deliveryCompany = deliveryCompany || state.deliveryCompany;
+      state.parcelLockerId = parcelLockerId || state.parcelLockerId;
+      state.paymentMethod = paymentMethod || state.paymentMethod;
+    },
   },
 });
 
