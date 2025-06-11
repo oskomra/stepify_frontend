@@ -8,7 +8,7 @@ import {
   TagIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const links = [
   {
@@ -40,6 +40,7 @@ const links = [
 export default function DashboardSidebar({ selectedPage = "products" }) {
   const [selected, setSelected] = useState(selectedPage);
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     if (pathname === "/dashboard") {
@@ -50,6 +51,11 @@ export default function DashboardSidebar({ selectedPage = "products" }) {
   }, [selectedPage, pathname]);
 
   const isDashboardSelected = selected === "dashboard";
+
+  const handleNavigation = (href, key) => {
+    setSelected(key);
+    router.push(href);
+  };
 
   return (
     <aside className="flex flex-col min-h-full bg-gradient-to-b from-neutral-800 via-neutral-700 to-neutral-700 text-white lg:border-r border-neutral-700 shadow-lg sticky top-0 w-full">
@@ -66,24 +72,23 @@ export default function DashboardSidebar({ selectedPage = "products" }) {
       </Link>
       <nav className="flex flex-col gap-1 px-2 py-2">
         {links.map((link) => (
-          <a
+          <button
             key={link.key}
-            href={link.href}
-            className={`group relative flex items-center rounded-lg px-4 py-3 text-base font-medium transition-all duration-150 outline-none cursor-pointer
+            onClick={() => handleNavigation(link.href, link.key)}
+            className={`group relative flex items-center w-full rounded-lg px-4 py-3 text-base font-medium transition-all duration-150 outline-none cursor-pointer
               ${
                 selected === link.key
                   ? "bg-neutral-700 text-white shadow"
                   : "hover:bg-neutral-700 hover:text-white"
               }
             `}
-            onClick={() => setSelected(link.key)}
           >
             {link.icon}
             <span>{link.label}</span>
             {selected === link.key && (
               <span className="absolute left-0 top-0 h-full w-1 bg-primary rounded-r-lg" />
             )}
-          </a>
+          </button>
         ))}
       </nav>
     </aside>

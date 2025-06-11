@@ -7,6 +7,7 @@ const productsSlice = createSlice({
     products: [],
     filteredProducts: [],
     sortOption: null,
+    searchQuery: "",
     filters: {
       brandNames: [],
       categories: [],
@@ -60,6 +61,88 @@ const productsSlice = createSlice({
         newSortOption
       );
     },
+    exactProductSearch: (state, action) => {
+      const productId = action.payload;
+      const exactProduct = state.products.find(
+        (product) => product.id === productId
+      );
+
+      if (exactProduct) {
+        state.filteredProducts = [exactProduct];
+        state.searchQuery = `${exactProduct.brandName} ${exactProduct.modelName}`;
+      }
+    },
+    searchProducts: (state, action) => {
+      state.searchQuery = action.payload;
+
+      let results = [...state.products];
+
+      if (action.payload.trim() !== "") {
+        const query = action.payload.toLowerCase();
+        results = results.filter(
+          (product) =>
+            product.brandName.toLowerCase().includes(query) ||
+            product.modelName.toLowerCase().includes(query)
+        );
+      }
+
+      const { brandNames, categories, genders, colors, sizes } = state.filters;
+
+      if (brandNames && brandNames.length > 0) {
+        results = results.filter((product) =>
+          brandNames.includes(product.brandName)
+        );
+      }
+
+      if (categories && categories.length > 0) {
+        results = results.filter((product) =>
+          categories.includes(product.category)
+        );
+      }
+
+      if (genders && genders.length > 0) {
+        results = results.filter((product) => genders.includes(product.gender));
+      }
+
+      if (colors && colors.length > 0) {
+        results = results
+          .filter((product) =>
+            product.colors.some((colorObj) => colors.includes(colorObj.color))
+          )
+          .map((product) => {
+            return {
+              ...product,
+              colors: product.colors.filter((colorObj) =>
+                colors.includes(colorObj.color)
+              ),
+            };
+          });
+      }
+
+      if (sizes && sizes.length > 0) {
+        results = results
+          .filter((product) =>
+            product.colors.some((colorObj) =>
+              colorObj.sizes.some((sizeObj) => sizes.includes(sizeObj.size))
+            )
+          )
+          .map((product) => {
+            return {
+              ...product,
+              colors: product.colors
+                .map((colorObj) => ({
+                  ...colorObj,
+                  sizes: colorObj.sizes.filter((sizeObj) =>
+                    sizes.includes(sizeObj.size)
+                  ),
+                }))
+                .filter((colorObj) => colorObj.sizes.length > 0),
+            };
+          });
+      }
+
+      state.filteredProducts = sortProducts(results, state.sortOption);
+    },
   },
 });
 
@@ -71,6 +154,7 @@ export const {
   removeFilter,
   sortFilteredProducts,
   setSortOption,
+  searchProducts,
 } = productsSlice.actions;
 
 export default productsSlice.reducer;

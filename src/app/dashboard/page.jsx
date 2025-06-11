@@ -8,11 +8,11 @@ import {
   DollarSign,
   TrendingUp,
 } from "lucide-react";
-import useFetchOrders from "@/hooks/useFetchOrders";
+import useFetchAllOrders from "@/hooks/useFetchAllOrders";
 import useFetchProducts from "@/hooks/useFetchProducts";
 
 export default function DashboardOverview() {
-  const { orders } = useFetchOrders();
+  const { orders } = useFetchAllOrders();
   const { products } = useFetchProducts();
   const [stats, setStats] = useState({
     totalRevenue: 0,

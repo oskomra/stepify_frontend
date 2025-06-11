@@ -12,7 +12,7 @@ export default function useFetchFilteredProducts() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchFilteredProducts(selectedFilters) {
+    async function fetchFilteredProducts(selectedFilters, query) {
       try {
         setLoading(true);
         const response = await fetch("http://localhost:8080/products/filter", {
@@ -20,7 +20,9 @@ export default function useFetchFilteredProducts() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(selectedFilters),
+          body: JSON.stringify({
+            ...selectedFilters,
+          }),
           credentials: "include",
         });
         const data = await response.json();

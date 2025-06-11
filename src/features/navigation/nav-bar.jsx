@@ -1,8 +1,8 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
 import UserDropdownMenu from "./user-dropdownmenu.jsx";
 import CartDropdownMenu from "./cart-dropdownmenu.jsx";
+import DashboardDropdownMenu from "./dashboard-dropdownmenu.jsx";
 
 export default function Navbar() {
   return (
@@ -24,6 +24,9 @@ export default function Navbar() {
 
         <div className="hover:bg-neutral-700 rounded-lg">
           <CartDropdownMenu />
+        </div>
+        <div className="hover:bg-neutral-700 rounded-lg">
+          <DashboardDropdownMenu />
         </div>
       </div>
     </nav>

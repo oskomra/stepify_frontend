@@ -6,14 +6,44 @@ import { useDispatch } from "react-redux";
 
 const AuthContext = createContext({
   token: null,
+  user: null,
   login: () => {},
   logout: () => {},
+  hasRole: () => {},
 });
 
 export default function AuthProvider({ children, initialToken }) {
   const [token, setToken] = useState(initialToken);
+  const [user, setUser] = useState(null);
   const router = useRouter();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (token) {
+        try {
+          const response = await fetch("http://localhost:8080/user", {
+            credentials: "include",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          if (response.ok) {
+            const userData = await response.json();
+            setUser(userData);
+          } else if (response.status === 401) {
+            setToken(null);
+            setUser(null);
+            delete axios.defaults.headers.common["Authorization"];
+          }
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [token]);
 
   useEffect(() => {
     axios.defaults.withCredentials = true;
@@ -25,10 +55,16 @@ export default function AuthProvider({ children, initialToken }) {
     else delete axios.defaults.headers.common["Authorization"];
   }, [token]);
 
-  const login = (newToken) => {
+  const hasRole = (requiredRole) => {
+    if (!user) return false;
+    return user.authority === requiredRole;
+  };
+
+  const login = (newToken, userData) => {
     dispatch({ type: "addresses/clearAddresses" });
     dispatch({ type: "addresses/clearSelectedAddress" });
     setToken(newToken);
+    setUser(userData);
   };
 
   const logout = async () => {
@@ -39,6 +75,7 @@ export default function AuthProvider({ children, initialToken }) {
       });
       if (response.ok) {
         setToken(null);
+        setUser(null);
         dispatch({ type: "addresses/clearAddresses" });
         dispatch({ type: "addresses/clearSelectedAddress" });
         dispatch({ type: "cart/clearCart" });
@@ -55,7 +92,7 @@ export default function AuthProvider({ children, initialToken }) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, logout }}>
+    <AuthContext.Provider value={{ token, user, login, logout, hasRole }}>
       {children}
     </AuthContext.Provider>
   );

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "../../../components/ui/data-table";
 import { columns } from "./columns";
-import useFetchOrders from "@/hooks/useFetchOrders";
+import useFetchAllOrders from "@/hooks/useFetchAllOrders";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,7 +37,7 @@ export default function OrderDashboard() {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
   const [newStatus, setNewStatus] = useState("");
-  const { orders } = useFetchOrders();
+  const { orders } = useFetchAllOrders();
   const router = useRouter();
 
   useEffect(() => {

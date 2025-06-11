@@ -53,11 +53,15 @@ export function LoginForm({ className, ...props }) {
       });
       if (response.ok) {
         const data = await response.json();
-        login(data.token);
+        login(data.token, data.user);
         dispatch({ type: "user/setUserEmail", payload: data.user.email });
         dispatch({ type: "user/setUserName", payload: data.user.name });
         dispatch({ type: "user/setUserLastName", payload: data.user.lastName });
         dispatch({ type: "user/setUserPhone", payload: data.user.phone });
+        dispatch({
+          type: "user/setUserAuthority",
+          payload: data.user.authority,
+        });
 
         try {
           const cartResponse = await fetch("http://localhost:8080/cart", {
@@ -70,7 +74,6 @@ export function LoginForm({ className, ...props }) {
 
           if (cartResponse.ok) {
             const cartData = await cartResponse.json();
-            // Update cart in Redux
             dispatch({
               type: "cart/setCartItems",
               payload: cartData.cartItems,
