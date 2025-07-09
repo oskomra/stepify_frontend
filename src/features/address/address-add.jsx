@@ -36,14 +36,17 @@ export default function AddAddress() {
 
   async function onSubmit(data) {
     try {
-      const response = await fetch("http://localhost:8080/addresses", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/addresses`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(data),
+        }
+      );
       if (response.ok) {
         const newAddress = await response.json();
         dispatch({ type: "addresses/addAddress", payload: newAddress });

@@ -15,16 +15,19 @@ export default function useFetchFilteredProducts() {
     async function fetchFilteredProducts(selectedFilters, query) {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:8080/products/filter", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ...selectedFilters,
-          }),
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/products/filter`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...selectedFilters,
+            }),
+            credentials: "include",
+          }
+        );
         const data = await response.json();
         dispatch({ type: "products/setFilteredProducts", payload: data });
       } catch (err) {

@@ -23,7 +23,7 @@ export default function ProductCard({ product }) {
       onClick={handleCardClick}
     >
       <img
-        src={`http://localhost:8080${selectedVariant.images[0]}`}
+        src={`${process.env.NEXT_PUBLIC_API_URL}${selectedVariant.images[0]}`}
         alt={`${product.brandName} ${product.modelName}`}
         className="h-48 w-full object-contain"
       />
@@ -32,7 +32,7 @@ export default function ProductCard({ product }) {
         {product.colors.slice(0, 4).map((color, idx) => (
           <img
             key={idx}
-            src={`http://localhost:8080${color.images[0]}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}${color.images[0]}`}
             alt={color.color}
             className={`w-12 h-12 rounded border cursor-pointer ${
               idx === selectedColorIndex ? "border-black" : "border-transparent"

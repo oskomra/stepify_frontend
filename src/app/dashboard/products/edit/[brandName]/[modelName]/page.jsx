@@ -3,7 +3,7 @@ import EditProduct from "@/features/product/edit-product/edit-product";
 export default async function EditProductPage({ params }) {
   const { brandName, modelName } = params;
   const response = await fetch(
-    `http://localhost:8080/products/${brandName}/${modelName}`
+    `${process.env.NEXT_PUBLIC_API_URL}/products/${brandName}/${modelName}`
   );
 
   if (response.status === 404) {

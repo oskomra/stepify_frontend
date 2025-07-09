@@ -54,7 +54,7 @@ export default function AddColor({ product, setProduct }) {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/colors/${product.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/colors/${product.id}`,
         {
           method: "POST",
           credentials: "include",

@@ -9,10 +9,13 @@ export default function useFetchPromotions() {
   useEffect(() => {
     async function fetchActivePromotions() {
       try {
-        const response = await fetch("http://localhost:8080/promotions", {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/promotions`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         if (response.ok) {
           const promotions = await response.json();
           dispatch({

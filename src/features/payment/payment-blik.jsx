@@ -35,7 +35,7 @@ export default function PaymentBlik({ payment }) {
   async function onSubmit(data) {
     try {
       const response = await fetch(
-        `http://localhost:8080/payment/${payment.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/payment/${payment.id}`,
         {
           method: "POST",
           headers: {

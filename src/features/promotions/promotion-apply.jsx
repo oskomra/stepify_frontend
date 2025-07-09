@@ -32,14 +32,17 @@ export default function PromotionApply() {
 
   async function onSubmit(data) {
     try {
-      const response = await fetch("http://localhost:8080/promotions/apply", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ code: data.code }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/promotions/apply`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ code: data.code }),
+        }
+      );
       if (response.ok) {
         await updateCartData(dispatch);
         reset();

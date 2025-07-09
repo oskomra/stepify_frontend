@@ -43,7 +43,7 @@ export default function ProductDetails({ product }) {
     }
     try {
       const response = await fetch(
-        `http://localhost:8080/cart/${brandName}/${modelName}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/cart/${brandName}/${modelName}`,
         {
           method: "POST",
           headers: {
@@ -84,7 +84,7 @@ export default function ProductDetails({ product }) {
       <div className="flex flex-col lg:flex-row w-full gap-4 lg:gap-5">
         <div className="w-full lg:basis-3/5 bg-neutral-100 min-h-[250px] md:min-h-[320px] lg:min-h-[400px] rounded-md">
           <img
-            src={`http://localhost:8080${selectedColor.images[0]}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}${selectedColor.images[0]}`}
             alt={`${brandName} ${modelName}`}
             className="w-full h-full object-contain p-2"
           />

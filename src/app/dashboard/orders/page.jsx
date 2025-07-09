@@ -80,7 +80,7 @@ export default function OrderDashboard() {
   async function handleOrderStatusUpdate(orderId, status) {
     try {
       const response = await fetch(
-        `http://localhost:8080/order/${orderId}/status`,
+        `${process.env.NEXT_PUBLIC_API_URL}/order/${orderId}/status`,
         {
           method: "PATCH",
           headers: {
@@ -111,13 +111,16 @@ export default function OrderDashboard() {
   }
 
   async function handleOrderDetails(orderId) {
-    const response = await fetch(`http://localhost:8080/order/${orderId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/order/${orderId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
     if (response.ok) {
       router.push(`/dashboard/orders/${orderId}`);
     } else {

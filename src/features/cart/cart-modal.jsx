@@ -49,9 +49,11 @@ export default function CartModal({
             <div className="flex flex-row items-center w-full gap-5 h-14">
               <div>
                 <img
-                  src={`http://localhost:8080/images/${product.modelName
-                    .split(" ")
-                    .join("_")}_${selectedColor.color}.webp`}
+                  src={`${
+                    process.env.NEXT_PUBLIC_API_URL
+                  }/images/${product.modelName.split(" ").join("_")}_${
+                    selectedColor.color
+                  }.webp`}
                   alt={`${product.brandName} ${product.modelName}`}
                   className="w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 object-contain rounded bg-white"
                 />

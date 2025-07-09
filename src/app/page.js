@@ -9,7 +9,7 @@ export default function Home() {
       <section className="relative min-h-[500px] rounded-lg shadow overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={`http://localhost:8080/images/banner.png`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}/images/banner.png`}
             alt="Stepify Hero"
             className="w-full h-full object-cover opacity-50"
           />

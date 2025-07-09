@@ -43,7 +43,7 @@ export function LoginForm({ className, ...props }) {
 
   async function onSubmit(data) {
     try {
-      const response = await fetch("http://localhost:8080/login", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,13 +64,16 @@ export function LoginForm({ className, ...props }) {
         });
 
         try {
-          const cartResponse = await fetch("http://localhost:8080/cart", {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              Authorization: `Bearer ${data.token}`,
-            },
-          });
+          const cartResponse = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/cart`,
+            {
+              method: "GET",
+              credentials: "include",
+              headers: {
+                Authorization: `Bearer ${data.token}`,
+              },
+            }
+          );
 
           if (cartResponse.ok) {
             const cartData = await cartResponse.json();

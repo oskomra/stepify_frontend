@@ -10,9 +10,12 @@ export default function useFetchPayment(id) {
 
     const fetchPayment = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/payment/${id}`, {
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/payment/${id}`,
+          {
+            credentials: "include",
+          }
+        );
         if (!response.ok) throw new Error("Failed to fetch payment");
         const data = await response.json();
         setPayment(data);

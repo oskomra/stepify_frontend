@@ -12,10 +12,13 @@ export default function useFetchProducts() {
     async function fetchProducts() {
       try {
         setLoading(true);
-        const response = await fetch("http://localhost:8080/products", {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/products`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         const data = await response.json();
         dispatch({ type: "products/setProducts", payload: data });
         dispatch({ type: "products/setFilteredProducts", payload: data });

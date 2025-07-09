@@ -7,12 +7,15 @@ export default async function PaymentPage({ params }) {
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.toString();
 
-  const response = await fetch(`http://localhost:8080/order/${orderId}`, {
-    headers: {
-      Cookie: cookieHeader,
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/order/${orderId}`,
+    {
+      headers: {
+        Cookie: cookieHeader,
+        "Content-Type": "application/json",
+      },
+    }
+  );
 
   if (response.status === 404) {
     notFound();

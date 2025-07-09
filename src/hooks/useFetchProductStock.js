@@ -13,7 +13,7 @@ export default function useFetchProductStock(productId, color, size) {
       try {
         setLoading(true);
         const response = await fetch(
-          `http://localhost:8080/products/${productId}/stock?color=${color}&size=${size}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/products/${productId}/stock?color=${color}&size=${size}`,
           {
             method: "GET",
             credentials: "include",

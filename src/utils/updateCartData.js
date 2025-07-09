@@ -2,7 +2,7 @@ import { setCartItems } from "@/store/slices/cartSlice";
 
 export const updateCartData = async (dispatch) => {
   try {
-    const response = await fetch("http://localhost:8080/cart", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/cart`, {
       credentials: "include",
     });
     if (response.ok) {

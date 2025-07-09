@@ -46,10 +46,13 @@ export default function CartItem() {
 
   const handleRemoveItem = async (itemId) => {
     try {
-      const response = await fetch(`http://localhost:8080/cart/${itemId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/cart/${itemId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
       if (response.ok) {
         dispatch(removeCartItem(itemId));
         await updateCartData(dispatch);
@@ -63,7 +66,7 @@ export default function CartItem() {
     if (newQuantity < 1) return;
     try {
       const response = await fetch(
-        `http://localhost:8080/cart/${itemId}?quantity=${newQuantity}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/cart/${itemId}?quantity=${newQuantity}`,
         {
           method: "PATCH",
           credentials: "include",
@@ -94,9 +97,11 @@ export default function CartItem() {
               <div className="flex flex-row items-center w-full gap-5">
                 <div>
                   <img
-                    src={`http://localhost:8080/images/${item.modelName
-                      .split(" ")
-                      .join("_")}_${item.color}.webp`}
+                    src={`${
+                      process.env.NEXT_PUBLIC_API_URL
+                    }/images/${item.modelName.split(" ").join("_")}_${
+                      item.color
+                    }.webp`}
                     alt={`${item.brandName} ${item.modelName}`}
                     className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 object-contain rounded bg-white"
                   />

@@ -33,7 +33,7 @@ export default function PromotionDashboard() {
 
   async function handlePromotionDelete(promotionId) {
     const response = await fetch(
-      `http://localhost:8080/promotions/${promotionId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/promotions/${promotionId}`,
       {
         method: "DELETE",
         headers: {

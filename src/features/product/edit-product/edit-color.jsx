@@ -18,10 +18,13 @@ export default function EditColor({ product, setProduct }) {
 
   async function handleDeleteColor(id) {
     try {
-      const response = await fetch(`http://localhost:8080/colors/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/colors/${id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
 
       if (response.ok) {
         const updatedColors = product.colors.filter((color) => color.id !== id);
@@ -52,14 +55,17 @@ export default function EditColor({ product, setProduct }) {
     setError((prev) => ({ ...prev, [color.id]: undefined }));
 
     try {
-      const response = await fetch(`http://localhost:8080/colors/${color.id}`, {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ price }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/colors/${color.id}`,
+        {
+          method: "PATCH",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ price }),
+        }
+      );
       if (response.ok) {
         const updatedColors = product.colors.map((c) =>
           c.id === color.id ? { ...c, price } : c

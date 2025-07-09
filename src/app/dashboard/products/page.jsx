@@ -84,7 +84,7 @@ export default function ProductDashboard() {
 
   async function handleProductDelete(productId) {
     const response = await fetch(
-      `http://localhost:8080/products/${productId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`,
       {
         method: "DELETE",
         headers: {
@@ -104,7 +104,7 @@ export default function ProductDashboard() {
 
   async function handleProductEdit(brandName, modelName) {
     const response = await fetch(
-      `http://localhost:8080/products/${brandName}/${modelName}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/products/${brandName}/${modelName}`,
       {
         method: "GET",
         headers: {

@@ -22,12 +22,15 @@ export default function AuthProvider({ children, initialToken }) {
     const fetchUserData = async () => {
       if (token) {
         try {
-          const response = await fetch("http://localhost:8080/user", {
-            credentials: "include",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/user`,
+            {
+              credentials: "include",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
           if (response.ok) {
             const userData = await response.json();
             setUser(userData);
@@ -69,10 +72,13 @@ export default function AuthProvider({ children, initialToken }) {
 
   const logout = async () => {
     try {
-      const response = await fetch("http://localhost:8080/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/logout`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
       if (response.ok) {
         setToken(null);
         setUser(null);

@@ -13,10 +13,13 @@ export default function UsersDashboard() {
       setLoading(true);
       setError(null);
       try {
-        const response = await fetch("http://localhost:8080/users", {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/users`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         if (!response.ok) throw new Error("Failed to fetch users");
         const users = await response.json();
         setData(users);
@@ -31,10 +34,13 @@ export default function UsersDashboard() {
 
   async function handleDeleteUser(userId) {
     try {
-      const response = await fetch(`http://localhost:8080/user/${userId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
       if (!response.ok) throw new Error("Failed to delete user");
       setData((prevData) => prevData.filter((user) => user.id !== userId));
     } catch (err) {

@@ -84,10 +84,13 @@ export default function OrderDetails({ orderDetails }) {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const response = await fetch(`http://localhost:8080/user/${userId}`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch user info");
         }

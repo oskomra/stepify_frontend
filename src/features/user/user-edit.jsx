@@ -41,7 +41,7 @@ export default function UserEdit({ user }) {
 
   async function onSubmit(data) {
     try {
-      const response = await fetch("http://localhost:8080/user", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

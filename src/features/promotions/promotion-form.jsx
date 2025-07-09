@@ -77,14 +77,17 @@ export default function PromotionForm() {
       stackable: data.stackable,
     };
 
-    const response = await fetch("http://localhost:8080/promotions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(promotionData),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/promotions`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(promotionData),
+      }
+    );
 
     if (response.ok) {
       router.push("/dashboard/promotions");

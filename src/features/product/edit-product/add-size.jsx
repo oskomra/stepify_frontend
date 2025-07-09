@@ -24,14 +24,17 @@ export default function AddSize({ color, product, setProduct }) {
 
   async function onSubmit(data) {
     try {
-      const response = await fetch(`http://localhost:8080/sizes/${color.id}`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/sizes/${color.id}`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       if (response.ok) {
         const newSize = await response.json();

@@ -50,7 +50,7 @@ export default function Summary() {
     };
 
     try {
-      const response = await fetch("http://localhost:8080/order", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export default function Summary() {
       if (response.ok) {
         const data = await response.json();
         console.log("Order saved successfully:", data);
-        router.push(`http://localhost:3000/payment/${data.id}`);
+        router.push(`/payment/${data.id}`);
       }
     } catch (error) {
       console.error("Error saving order:", error);

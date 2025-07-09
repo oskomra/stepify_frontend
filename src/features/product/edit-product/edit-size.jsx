@@ -14,10 +14,13 @@ export default function SizeEdit({ color, product, setProduct }) {
 
   async function handleDeleteSize(id) {
     try {
-      const response = await fetch(`http://localhost:8080/sizes/${id}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/sizes/${id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
 
       if (response.ok) {
         const updatedSizes = product.colors.map((color) => ({
@@ -36,14 +39,17 @@ export default function SizeEdit({ color, product, setProduct }) {
 
   async function handleEditStock(size) {
     try {
-      const response = await fetch(`http://localhost:8080/sizes/${size.id}`, {
-        method: "PATCH",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ stock: stockValues[size.id] }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/sizes/${size.id}`,
+        {
+          method: "PATCH",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ stock: stockValues[size.id] }),
+        }
+      );
       if (response.ok) {
         const updatedColors = product.colors.map((c) =>
           c.id === color.id

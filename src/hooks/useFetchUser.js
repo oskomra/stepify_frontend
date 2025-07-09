@@ -13,10 +13,13 @@ export default function useFetchUser() {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const response = await fetch("http://localhost:8080/user", {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/user`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         if (response.ok) {
           const user = await response.json();
           dispatch({ type: "user/setUserId", payload: user.id });

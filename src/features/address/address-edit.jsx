@@ -37,7 +37,7 @@ export default function EditAddress({ address }) {
   async function onSubmit(data) {
     try {
       const response = await fetch(
-        `http://localhost:8080/addresses/${address.id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/addresses/${address.id}`,
         {
           method: "PUT",
           headers: {

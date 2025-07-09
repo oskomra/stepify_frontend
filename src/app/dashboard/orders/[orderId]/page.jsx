@@ -7,14 +7,17 @@ export default async function OrderDetailsPage({ params }) {
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.toString();
 
-  const response = await fetch(`http://localhost:8080/order/${orderId}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: cookieHeader,
-    },
-    credentials: "include",
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/order/${orderId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: cookieHeader,
+      },
+      credentials: "include",
+    }
+  );
 
   if (response.status === 404) {
     notFound();

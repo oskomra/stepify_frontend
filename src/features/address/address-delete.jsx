@@ -12,7 +12,7 @@ export default function DeleteAddress({ addressId }) {
     event.stopPropagation();
     try {
       const response = await fetch(
-        `http://localhost:8080/addresses/${addressId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/addresses/${addressId}`,
         {
           method: "DELETE",
           credentials: "include",

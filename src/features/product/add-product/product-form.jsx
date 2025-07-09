@@ -80,11 +80,14 @@ export default function ProductForm() {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/products", {
-        method: "POST",
-        credentials: "include",
-        body: formData,
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/products`,
+        {
+          method: "POST",
+          credentials: "include",
+          body: formData,
+        }
+      );
       if (response.ok) {
         router.push("/dashboard/products");
       } else {

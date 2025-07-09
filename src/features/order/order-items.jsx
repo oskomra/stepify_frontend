@@ -9,7 +9,7 @@ export default function OrderItem({ orderItems }) {
           <div className="flex flex-row items-center w-full gap-5 h-14">
             <div>
               <img
-                src={`http://localhost:8080/images/${item.modelName
+                src={`${process.env.NEXT_PUBLIC_API_URL}/images/${item.modelName
                   .split(" ")
                   .join("_")}_${item.color}.webp`}
                 alt={`${item.brandName} ${item.modelName}`}

@@ -18,7 +18,7 @@ export default function ProductDetailsColors({
           <img
             key={idx}
             onClick={() => handleColorClick(color)}
-            src={`http://localhost:8080${color.images[0]}`}
+            src={`${process.env.NEXT_PUBLIC_API_URL}${color.images[0]}`}
             alt={color.color}
             className={`w-12 h-12 rounded border cursor-pointer ${
               selectedColor && selectedColor.color === color.color

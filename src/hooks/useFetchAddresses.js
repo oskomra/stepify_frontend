@@ -19,10 +19,13 @@ export default function useFetchAddresses() {
     async function fetchAddresses() {
       try {
         setLoading(true);
-        const response = await fetch(`http://localhost:8080/addresses/${id}`, {
-          method: "GET",
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/addresses/${id}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
+        );
         if (response.ok) {
           const data = await response.json();
           dispatch({ type: "addresses/setAddresses", payload: data });
