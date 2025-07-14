@@ -20,33 +20,30 @@ export default function AuthProvider({ children, initialToken }) {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (token) {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/user`,
-            {
-              credentials: "include",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          if (response.ok) {
-            const userData = await response.json();
-            setUser(userData);
-          } else if (response.status === 401) {
-            setToken(null);
-            setUser(null);
-            delete axios.defaults.headers.common["Authorization"];
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/user`,
+          {
+            credentials: "include",
           }
-        } catch (error) {
-          console.error("Failed to fetch user data:", error);
+        );
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data.user || data); // adjust if your API returns just the user or { user, token }
+          if (data.token) setToken(data.token);
+          else setToken("cookie"); // fallback if token not present
+        } else if (response.status === 401) {
+          setToken(null);
+          setUser(null);
+          delete axios.defaults.headers.common["Authorization"];
         }
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
       }
     };
 
     fetchUserData();
-  }, [token]);
+  }, []);
 
   useEffect(() => {
     axios.defaults.withCredentials = true;
