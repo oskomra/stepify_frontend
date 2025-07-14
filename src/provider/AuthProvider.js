@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 const AuthContext = createContext({
   token: null,
   user: null,
+  loading: true,
   login: () => {},
   logout: () => {},
   hasRole: () => {},
@@ -39,7 +40,8 @@ export default function AuthProvider({ children, initialToken }) {
         }
       } catch (error) {
         console.error("Failed to fetch user data:", error);
-      }
+      } finally {
+        setLoading(false);
     };
 
     fetchUserData();

@@ -6,16 +6,11 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function CartPage() {
-  const { token } = useAuth();
+  const { token, loading } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    if (!token) {
-      router.replace("/login");
-    }
-  }, [token, router]);
-
-  if (!token) return null;
+  if (loading) return <Spinner />; // or skeleton
+  if (!token) router.replace("/login");
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 px-2 sm:px-4 md:px-8 lg:px-16 xl:px-32 py-8 items-start justify-center w-full max-w-screen-2xl mx-auto">
