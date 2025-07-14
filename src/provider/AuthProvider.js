@@ -42,6 +42,7 @@ export default function AuthProvider({ children, initialToken }) {
         console.error("Failed to fetch user data:", error);
       } finally {
         setLoading(false);
+      }
     };
 
     fetchUserData();
