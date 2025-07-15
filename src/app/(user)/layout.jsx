@@ -1,24 +1,23 @@
 "use client";
 import UserSidebar from "./user-sidebar";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/provider/AuthProvider";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function UserLayout({ children }) {
-  const { user, loading } = useAuth();
+  const { token } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
   const selectedPage = pathname.split("/")[1] || "account";
 
   useEffect(() => {
-    // Only redirect after loading is done
-    if (!loading && !user) {
+    if (!token) {
       router.replace("/login");
     }
-  }, [user, loading, router]);
+  }, [token, router]);
 
-  if (loading) return <div>Loading...</div>;
-  if (!user) return null; // Or a message if you prefer
+  if (!token) return null;
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 px-2 sm:px-4 md:px-8 lg:px-16 xl:px-32 py-8 items-start justify-center w-full max-w-screen-2xl mx-auto">
