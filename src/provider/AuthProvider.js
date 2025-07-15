@@ -73,13 +73,9 @@ export default function AuthProvider({ children, initialToken }) {
 
   const logout = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/logout`,
-        {
-          method: "POST",
-          credentials: "include",
-        }
-      );
+      const response = await fetch("/api/logout", {
+        method: "POST",
+      });
       if (response.ok) {
         setToken(null);
         setUser(null);
