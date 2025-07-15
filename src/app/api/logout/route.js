@@ -18,7 +18,7 @@ export async function POST(request) {
   const cookie = serialize("token", "", {
     httpOnly: true,
     secure: true,
-    sameSite: "lax",
+    sameSite: "none",
     path: "/",
     maxAge: 0,
   });
