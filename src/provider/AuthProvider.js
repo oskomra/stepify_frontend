@@ -14,6 +14,7 @@ const AuthContext = createContext({
 
 export default function AuthProvider({ children, initialToken }) {
   const [token, setToken] = useState(initialToken);
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const router = useRouter();
   const dispatch = useDispatch();
@@ -41,7 +42,8 @@ export default function AuthProvider({ children, initialToken }) {
           }
         } catch (error) {
           console.error("Failed to fetch user data:", error);
-          fetchUserData();
+        } finally {
+          setLoading(false);
         }
       }
     };
