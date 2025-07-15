@@ -19,6 +19,18 @@ export default function AuthProvider({ children, initialToken }) {
   const router = useRouter();
   const dispatch = useDispatch();
 
+  // Hydrate token from cookie on client after hydration
+  useEffect(() => {
+    if (!token && typeof window !== "undefined") {
+      const match = document.cookie.match(/(^| )token=([^;]+)/);
+      if (match) {
+        setToken(match[2]);
+      } else {
+        setLoading(false);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (token) {
@@ -45,6 +57,8 @@ export default function AuthProvider({ children, initialToken }) {
         } finally {
           setLoading(false);
         }
+      } else {
+        setLoading(false);
       }
     };
 
@@ -97,7 +111,9 @@ export default function AuthProvider({ children, initialToken }) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, user, login, logout, hasRole }}>
+    <AuthContext.Provider
+      value={{ token, user, login, logout, hasRole, loading }}
+    >
       {children}
     </AuthContext.Provider>
   );
