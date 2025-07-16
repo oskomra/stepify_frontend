@@ -8,7 +8,7 @@ export async function POST(request) {
 
     // Forward login credentials to your backend
     const backendRes = await axios.post(
-      "https://stepify-backend.onrender.com/login",
+      "https://stepify-backend.onrender.com/api/login",
       body
     );
 
