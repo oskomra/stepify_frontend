@@ -13,8 +13,8 @@ export async function POST(request) {
     );
 
     // Get token from backend response (adjust if your backend returns it differently)
-    const token = backendRes.data.token;
-    const user = backendRes.data.user;
+    const token = backendRes.token;
+    const user = backendRes.user;
 
     // Set cookie for frontend domain
     const cookie = serialize("token", token, {
