@@ -19,18 +19,6 @@ export default function AuthProvider({ children, initialToken }) {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // Hydrate token from cookie on client after hydration
-  useEffect(() => {
-    if (!token && typeof window !== "undefined") {
-      const match = document.cookie.match(/(^| )token=([^;]+)/);
-      if (match) {
-        setToken(match[2]);
-      } else {
-        setLoading(false);
-      }
-    }
-  }, []);
-
   useEffect(() => {
     const fetchUserData = async () => {
       if (token) {
