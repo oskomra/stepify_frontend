@@ -74,7 +74,7 @@ export default function AuthProvider({ children, initialToken }) {
 
   const logout = async () => {
     try {
-      const response = await fetch("/api/logout", {
+      const response = await fetch("/logout", {
         method: "POST",
       });
       if (response.ok) {
