@@ -27,9 +27,6 @@ export default function AuthProvider({ children, initialToken }) {
             `${process.env.NEXT_PUBLIC_API_URL}/user`,
             {
               credentials: "include",
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
             }
           );
           if (response.ok) {
