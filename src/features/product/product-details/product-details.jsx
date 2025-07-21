@@ -23,7 +23,7 @@ export default function ProductDetails({ product }) {
   const [selectedSize, setSelectedSize] = useState(0);
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
-  const { token } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
 
   const {
@@ -37,7 +37,7 @@ export default function ProductDetails({ product }) {
   });
 
   async function onSubmit(data) {
-    if (!token) {
+    if (!loading && !user) {
       router.push("/login");
       return;
     }
