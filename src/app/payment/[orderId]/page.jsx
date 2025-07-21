@@ -7,19 +7,14 @@ export default async function PaymentPage({ params }) {
     const { orderId } = await params;
 
     const cookieStore = cookies();
-    const cookieHeader = cookieStore
-      .getAll()
-      .map((c) => `${c.name}=${c.value}`)
-      .join("; ");
+    const tokenCookie = cookieStore.get("token"); // the one your backend expects
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/order/${orderId}`,
       {
         headers: {
-          Cookie: cookieHeader,
-          "Content-Type": "application/json",
+          ...(tokenCookie ? { Cookie: `token=${tokenCookie.value}` } : {}),
         },
-        credentials: "include",
         cache: "no-store",
       }
     );
