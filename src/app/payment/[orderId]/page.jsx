@@ -1,61 +1,57 @@
-import { cookies } from "next/headers";
+"use client";
+
+import { useEffect, useState } from "react";
 import Payment from "@/features/payment/payment";
-import { notFound } from "next/navigation";
 
-export default async function PaymentPage({ params }) {
-  try {
-    const { orderId } = await params;
+export default function PaymentPage({ params }) {
+  const { orderId } = params;
+  const [order, setOrder] = useState(null);
+  const [error, setError] = useState(null);
 
-    const cookieStore = cookies();
-    const tokenCookie = cookieStore.get("token"); // the one your backend expects
-
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/order/${orderId}`,
-      {
-        headers: {
-          ...(tokenCookie ? { Cookie: `token=${tokenCookie.value}` } : {}),
-        },
-        cache: "no-store",
-        credentials: "include", // Ensure cookies are sent with the request
-      }
-    );
-
-    if (!response.ok) {
-      const text = await response.text();
-      console.error("API error response (not JSON):", text);
-
-      if (response.status === 404) notFound();
-
-      if (response.status === 401) {
-        return (
-          <div className="text-red-500">
-            Unauthorized access. Please log in.
-          </div>
+  useEffect(() => {
+    async function loadOrder() {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/order/${orderId}`,
+          {
+            credentials: "include", // cookies sent automatically
+          }
         );
+
+        if (!response.ok) {
+          const text = await response.text();
+          console.error("API error response (not JSON):", text);
+
+          if (response.status === 404) {
+            setError("Order not found.");
+            return;
+          }
+
+          if (response.status === 401) {
+            setError("Unauthorized access. Please log in.");
+            return;
+          }
+
+          throw new Error(`Failed to fetch order: ${response.status}`);
+        }
+
+        const orderData = await response.json();
+        setOrder(orderData);
+      } catch (err) {
+        console.error("PaymentPage error:", err);
+        setError("Something went wrong loading the order.");
       }
-
-      throw new Error(
-        `Failed to fetch order: ${response.status} ${response.statusText}`
-      );
     }
 
-    const order = await response.json();
+    loadOrder();
+  }, [orderId]);
 
-    if (!order) {
-      return <div className="text-red-500">Order data not found.</div>;
-    }
+  if (error) return <div className="text-red-500">{error}</div>;
+  if (!order) return <div>Loading...</div>;
 
-    return (
-      <div className="flex flex-col items-center justify-center py-25">
-        <Payment order={order} />
-      </div>
-    );
-  } catch (error) {
-    console.error("PaymentPage error:", error);
-    return (
-      <div className="text-red-500">
-        Something went wrong loading the order.
-      </div>
-    );
-  }
+  return (
+    <div className="flex flex-col items-center justify-center py-25">
+      <Payment order={order} />
+    </div>
+  );
 }
