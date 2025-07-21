@@ -19,6 +19,7 @@ export default async function PaymentPage({ params }) {
           Cookie: cookieHeader,
           "Content-Type": "application/json",
         },
+        credentials: "include",
         cache: "no-store",
       }
     );
