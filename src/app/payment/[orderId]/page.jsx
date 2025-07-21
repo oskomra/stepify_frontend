@@ -1,11 +1,15 @@
 import { cookies } from "next/headers";
 import Payment from "@/features/payment/payment";
 import { notFound } from "next/navigation";
-export default async function PaymentPage({ params }) {
-  const { orderId } = await params;
 
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
+export default async function PaymentPage({ params }) {
+  const { orderId } = params;
+
+  const cookieStore = cookies();
+  const cookieHeader = cookieStore
+    .getAll()
+    .map((c) => `${c.name}=${c.value}`)
+    .join("; ");
 
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/order/${orderId}`,
@@ -14,6 +18,7 @@ export default async function PaymentPage({ params }) {
         Cookie: cookieHeader,
         "Content-Type": "application/json",
       },
+      cache: "no-store",
     }
   );
 
@@ -27,11 +32,9 @@ export default async function PaymentPage({ params }) {
     );
   }
 
-  const text = await response.text();
-  let order = null;
-  if (text) {
-    order = JSON.parse(text);
-  } else {
+  const order = await response.json();
+
+  if (!order) {
     return <div className="text-red-500">Order data not found.</div>;
   }
 
