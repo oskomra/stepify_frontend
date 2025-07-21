@@ -6,20 +6,20 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 export default function OrderPage() {
-  const { token } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const cartItems = useSelector((state) => state.cart.cartItems);
 
   useEffect(() => {
-    if (!token) {
+    if (!user) {
       router.replace("/login");
     }
     if (cartItems.length === 0) {
       router.replace("/cart");
     }
-  }, [token, router, cartItems]);
+  }, [user, router, cartItems]);
 
-  if (!token) return null;
+  if (!user) return null;
 
   return <ShippingDetails />;
 }
