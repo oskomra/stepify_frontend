@@ -25,12 +25,6 @@ export function ProtectedRoute({ children }) {
   return children;
 }
 
-"use client";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/provider/AuthProvider";
-
-
 export function AdminRoute({ children }) {
   const { user, loading } = useAuth();
   const router = useRouter();
@@ -58,4 +52,3 @@ export function AdminRoute({ children }) {
 
   return children;
 }
-Why?
