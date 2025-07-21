@@ -4,38 +4,42 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/provider/AuthProvider";
 
 export function ProtectedRoute({ children }) {
-  const { token } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
-    if (!token) {
-      router.replace("/login");
-    } else {
-      setIsAuthorized(true);
+    if (!loading) {
+      if (!user) {
+        router.replace("/login");
+      } else {
+        setIsAuthorized(true);
+      }
     }
-  }, [token, router]);
+  }, [user, loading, router]);
 
-  if (!isAuthorized) {
+  if (loading || !isAuthorized) {
     return null;
   }
 
   return children;
 }
 
+"use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/provider/AuthProvider";
+
+
 export function AdminRoute({ children }) {
-  const { token, user } = useAuth();
+  const { user, loading } = useAuth();
   const router = useRouter();
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    const checkAuth = async () => {
-      if (!token) {
-        router.replace("/login");
-        return;
-      }
-
+    if (!loading) {
       if (!user) {
+        router.replace("/login");
         return;
       }
 
@@ -45,14 +49,13 @@ export function AdminRoute({ children }) {
       }
 
       setIsChecking(false);
-    };
+    }
+  }, [user, loading, router]);
 
-    checkAuth();
-  }, [token, user, router]);
-
-  if (isChecking || !token || !user || user.authority !== "ROLE_ADMIN") {
+  if (loading || isChecking) {
     return null;
   }
 
   return children;
 }
+Why?
