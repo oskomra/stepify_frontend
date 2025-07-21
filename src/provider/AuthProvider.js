@@ -5,90 +5,92 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 
 const AuthContext = createContext({
-  token: null,
   user: null,
   login: () => {},
   logout: () => {},
   hasRole: () => {},
+  loading: true,
 });
 
-export default function AuthProvider({ children, initialToken }) {
-  const [token, setToken] = useState(initialToken);
+export default function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const router = useRouter();
   const dispatch = useDispatch();
 
+  // Fetch the authenticated user when the app loads
   useEffect(() => {
     const fetchUserData = async () => {
-      if (token) {
-        try {
-          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/user`,
-            {
-              credentials: "include",
-            }
-          );
-          if (response.ok) {
-            const userData = await response.json();
-            setUser(userData);
-          } else if (response.status === 401) {
-            setToken(null);
-            setUser(null);
-            delete axios.defaults.headers.common["Authorization"];
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/user`,
+          {
+            credentials: "include", // send backend cookie
           }
-        } catch (error) {
-          console.error("Failed to fetch user data:", error);
-        } finally {
-          setLoading(false);
+        );
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData);
+        } else if (response.status === 401) {
+          setUser(null);
         }
-      } else {
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      } finally {
         setLoading(false);
       }
     };
 
     fetchUserData();
-  }, [token]);
-
-  useEffect(() => {
-    axios.defaults.withCredentials = true;
   }, []);
-
-  useEffect(() => {
-    if (token)
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    else delete axios.defaults.headers.common["Authorization"];
-  }, [token]);
 
   const hasRole = (requiredRole) => {
     if (!user) return false;
     return user.authority === requiredRole;
   };
 
-  const login = (newToken, userData) => {
-    dispatch({ type: "addresses/clearAddresses" });
-    dispatch({ type: "addresses/clearSelectedAddress" });
-    setToken(newToken);
-    setUser(userData);
+  const login = async (credentials) => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
+        method: "POST",
+        credentials: "include", // important: store cookie
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(credentials),
+      });
+
+      if (res.ok) {
+        // Immediately fetch user info after login
+        const userRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+          credentials: "include",
+        });
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          setUser(userData);
+        }
+      } else {
+        throw new Error("Login failed");
+      }
+    } catch (e) {
+      console.error("Login error", e);
+    }
   };
 
   const logout = async () => {
     try {
-      const response = await fetch("/logout", {
-        method: "POST",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/logout`,
+        {
+          method: "POST",
+          credentials: "include", // to clear cookie on backend
+        }
+      );
       if (response.ok) {
-        setToken(null);
         setUser(null);
         dispatch({ type: "addresses/clearAddresses" });
         dispatch({ type: "addresses/clearSelectedAddress" });
         dispatch({ type: "cart/clearCart" });
         dispatch({ type: "cart/setCartQuantity", payload: 0 });
-
         router.push("/");
-      }
-      if (response.status === 401) {
-        console.error("Unauthorized logout attempt");
       }
     } catch (e) {
       console.error("Logout failed", e);
@@ -96,9 +98,7 @@ export default function AuthProvider({ children, initialToken }) {
   };
 
   return (
-    <AuthContext.Provider
-      value={{ token, user, login, logout, hasRole, loading }}
-    >
+    <AuthContext.Provider value={{ user, login, logout, hasRole, loading }}>
       {children}
     </AuthContext.Provider>
   );
