@@ -16,6 +16,7 @@ export default async function PaymentPage({ params }) {
           ...(tokenCookie ? { Cookie: `token=${tokenCookie.value}` } : {}),
         },
         cache: "no-store",
+        credentials: "include", // Ensure cookies are sent with the request
       }
     );
 
