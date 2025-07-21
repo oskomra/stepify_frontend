@@ -25,7 +25,7 @@ export default async function PaymentPage({ params }) {
 
     if (!response.ok) {
       const text = await response.text();
-      console.error("API error response:", text);
+      console.error("API error response (not JSON):", text);
 
       if (response.status === 404) notFound();
 
@@ -37,7 +37,9 @@ export default async function PaymentPage({ params }) {
         );
       }
 
-      throw new Error(`Failed to fetch order: ${response.status}`);
+      throw new Error(
+        `Failed to fetch order: ${response.status} ${response.statusText}`
+      );
     }
 
     const order = await response.json();
