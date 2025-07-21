@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 export default async function PaymentPage({ params }) {
   try {
-    const { orderId } = params;
+    const { orderId } = await params;
 
     const cookieStore = cookies();
     const cookieHeader = cookieStore
