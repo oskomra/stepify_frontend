@@ -43,7 +43,7 @@ export function LoginForm({ className, ...props }) {
 
   async function onSubmit(data) {
     try {
-      const response = await fetch("/login", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
