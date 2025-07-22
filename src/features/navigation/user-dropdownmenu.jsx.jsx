@@ -8,16 +8,16 @@ import { useRouter } from "next/navigation";
 
 export default function UserDropdownMenu() {
   const router = useRouter();
-  const { token, logout } = useAuth();
+  const { user, loading, logout } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    if (token) {
+    if (user) {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
     }
-  }, [token]);
+  }, [user]);
 
   const handleNavigation = (selectedPage) => {
     router.push(`/${selectedPage}`);

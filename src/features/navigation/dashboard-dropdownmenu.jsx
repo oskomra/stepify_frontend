@@ -1,22 +1,10 @@
 "use client";
 import { LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/provider/AuthProvider";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function DashboardDropdownMenu() {
   const router = useRouter();
-  const { token, logout } = useAuth();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    if (token) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, [token]);
 
   const handleNavigation = (selectedPage) => {
     router.push(`/dashboard/${selectedPage}`);

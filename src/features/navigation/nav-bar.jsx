@@ -5,6 +5,7 @@ import CartDropdownMenu from "./cart-dropdownmenu.jsx";
 import DashboardDropdownMenu from "./dashboard-dropdownmenu.jsx";
 
 export default function Navbar() {
+  const { user } = useAuth();
   return (
     <nav className="bg-neutral-800 text-neutral-100 shadow-lg p-4">
       <div className="flex items-center justify-center">
@@ -25,9 +26,11 @@ export default function Navbar() {
         <div className="hover:bg-neutral-700 rounded-lg">
           <CartDropdownMenu />
         </div>
-        <div className="hover:bg-neutral-700 rounded-lg">
-          <DashboardDropdownMenu />
-        </div>
+        {user && user.authority === "ROLE_ADMIN" && (
+          <div className="hover:bg-neutral-700 rounded-lg">
+            <DashboardDropdownMenu />
+          </div>
+        )}
       </div>
     </nav>
   );
