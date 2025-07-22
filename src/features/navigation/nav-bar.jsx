@@ -1,5 +1,6 @@
 "use client";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/provider/AuthProvider";
 import UserDropdownMenu from "./user-dropdownmenu.jsx";
 import CartDropdownMenu from "./cart-dropdownmenu.jsx";
 import DashboardDropdownMenu from "./dashboard-dropdownmenu.jsx";
