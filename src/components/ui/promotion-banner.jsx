@@ -30,7 +30,9 @@ export default function PromotionBanner() {
   useEffect(() => {
     const fetchPromotions = async () => {
       try {
-        const response = await fetch("http://localhost:8080/promotions/active");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/promotions/active`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch promotions");
         }
@@ -98,7 +100,7 @@ export default function PromotionBanner() {
                       <ImageIcon className="w-16 h-16 text-neutral-500" />
                     </div>
                     <img
-                      src={`http://localhost:8080/images/promotion${promotion.id}.webp`}
+                      src={`${process.env.NEXT_PUBLIC_API_URL}/images/promotion${promotion.id}.webp`}
                       alt={promotion.name}
                       className="absolute inset-0 w-full h-full object-cover"
                     />
