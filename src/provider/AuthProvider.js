@@ -47,29 +47,8 @@ export default function AuthProvider({ children }) {
     return user.authority === requiredRole;
   };
 
-  const login = async (credentials) => {
-    try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(credentials),
-      });
-
-      if (res.ok) {
-        const userRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
-          credentials: "include",
-        });
-        if (userRes.ok) {
-          const data = await userRes.json();
-          setUser(data.user);
-        }
-      } else {
-        throw new Error("Login failed");
-      }
-    } catch (e) {
-      console.error("Login error", e);
-    }
+  const login = (data) => {
+    setUser(data.user);
   };
 
   const logout = async () => {

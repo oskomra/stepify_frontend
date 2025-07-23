@@ -52,7 +52,7 @@ export function LoginForm({ className, ...props }) {
       });
       if (response.ok) {
         const data = await response.json();
-        login(data.token, data.user);
+        login(data);
         dispatch({ type: "user/setUserEmail", payload: data.user.email });
         dispatch({ type: "user/setUserName", payload: data.user.name });
         dispatch({ type: "user/setUserLastName", payload: data.user.lastName });
