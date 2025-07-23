@@ -1,7 +1,6 @@
 "use client";
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 
 const AuthContext = createContext({
@@ -18,14 +17,13 @@ export default function AuthProvider({ children }) {
   const router = useRouter();
   const dispatch = useDispatch();
 
-  // Fetch the authenticated user when the app loads
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/user`,
           {
-            credentials: "include", // send backend cookie
+            credentials: "include",
           }
         );
         if (response.ok) {
@@ -53,19 +51,18 @@ export default function AuthProvider({ children }) {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
         method: "POST",
-        credentials: "include", // important: store cookie
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(credentials),
       });
 
       if (res.ok) {
-        // Immediately fetch user info after login
         const userRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
           credentials: "include",
         });
         if (userRes.ok) {
-          const userData = await userRes.json();
-          setUser(userData);
+          const data = await userRes.json();
+          setUser(data.user);
         }
       } else {
         throw new Error("Login failed");
@@ -81,7 +78,7 @@ export default function AuthProvider({ children }) {
         `${process.env.NEXT_PUBLIC_API_URL}/logout`,
         {
           method: "POST",
-          credentials: "include", // to clear cookie on backend
+          credentials: "include",
         }
       );
       if (response.ok) {

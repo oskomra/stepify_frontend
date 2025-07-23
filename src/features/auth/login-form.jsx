@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useDispatch } from "react-redux";
 import { useAuth } from "@/provider/AuthProvider";
-import useFetchCart from "@/hooks/useFetchCart";
 
 const loginSchema = Yup.object({
   email: Yup.string()
