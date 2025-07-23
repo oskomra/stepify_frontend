@@ -22,8 +22,7 @@ export default function Home() {
             </h1>
             <p className="text-lg sm:text-xl text-white max-w-2xl mx-auto">
               Discover the latest trends in footwear for Men, Women, and Kids.
-              Shop top brands, exclusive deals, and find your perfect pair
-              today!
+              Shop top brands, exclusive deals, and find your perfect pair today
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
               <Link
